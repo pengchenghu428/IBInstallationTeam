@@ -3,4 +3,30 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="colorTextLight">@color/material_grey_50</color>
+    <color name="colorTextDark">@color/material_grey_800</color>
+
+    <!-- color -->
+    <color name="white">#ffffffff</color>
+    <color name="bg_common_gray">#ffe2e2e2</color>
+    <color name="black">#000000</color>
+    <color name="grad">#ff3c3c3c</color>
+    <color name="bule_gray">#576b95</color>
+    <color name="dark_green">#00c192</color>
+    <color name="weak_green">#bbe5bd</color>
+    <color name="dark_red">#f0250f</color>
+    <color name="red">#fa5151</color>
+    <color name="light_red">#fe696a</color>
+    <color name="sliver">#c0c0c0</color>
+    <color name="dark_gary">#e8e9ed</color>
+    <color name="light_gary">#f4f6f6</color>
+    <color name="gray01">#80666666</color>
+
+    <!-- dialog -->
+    <color name="font_common_1">#424242</color>
+    <color name="font_common_2">#a1a1a1</color>
+    <color name="font_blue">#42369a</color>
+    <color name="commom_background">#f3f3f3</color>
+
 </resources>

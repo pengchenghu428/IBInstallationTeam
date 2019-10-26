@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back"/>
+
+    <!-- 账号密码框 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#FFF">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@mipmap/ic_user_info"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_vertical" />
+            <EditText
+                android:id="@+id/text_input_username"
+                style="@style/editStyle"
+                android:hint="@string/prompt_username" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@mipmap/ic_password"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_vertical" />
+            <EditText
+                android:id="@+id/text_input_password"
+                style="@style/editStyle"
+                android:inputType="textPassword"
+                android:hint="@string/prompt_password" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 记住密码等 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFF"
+        android:padding="10dp">
+        <CheckBox
+            android:id="@+id/remember_pass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:padding="5dp"
+            android:text="记住密码"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp" />
+        <CheckBox
+            android:id="@+id/auto_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:layout_marginLeft="40dp"
+            android:padding="5dp"
+            android:text="自动登录"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <!-- 登录注册 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+        <Button
+            android:id="@+id/Login_Button"
+            style="@style/btnStyle"
+            android:text="登录" />
+        <Button
+            android:id="@+id/To_Register"
+            style="@style/btnStyle"
+            android:text="注册" />
+    </LinearLayout>
+
+</LinearLayout>

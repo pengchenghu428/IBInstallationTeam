@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/bg_round_white">
+
+    <!-- head -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:gravity="center_vertical">
+
+        <!-- 关闭窗口 -->
+        <ImageView
+            android:id="@+id/close_iv"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_close"/>
+
+        <!-- 头像 -->
+        <com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView
+            android:id="@+id/head_iv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toRightOf="@+id/close_iv"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/ic_launcher_round"/>
+
+        <!-- 输入提示 -->
+        <TextView
+            android:id="@+id/input_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/head_iv"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:text="@string/input_operate_password"
+            android:textSize="18sp"
+            android:textColor="@color/black"/>
+
+        <!-- 切换密码方式 -->
+        <TextView
+            android:id="@+id/toggle_input_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/use_finger_print"
+            android:textSize="14sp"
+            android:textColor="@color/bule_gray"/>
+
+    </RelativeLayout>
+
+    <!-- 分割线 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/weak_green"/>
+
+    <!-- 扫码详情 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <!-- 操作内容 -->
+        <TextView
+            android:id="@+id/scan_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/open_basket"
+            android:textSize="17sp"
+            android:textColor="@color/black"/>
+        <!-- 吊篮ID -->
+        <TextView
+            android:id="@+id/basket_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="A11028764"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+
+        <!-- 分割线 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/sliver"/>
+
+        <!-- 输入错误提示框 -->
+        <TextView
+            android:id="@+id/output_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="5dp"
+            android:text="@string/password_error"
+            android:textColor="@color/red"
+            android:visibility="invisible"/>
+
+        <!-- 输入框 -->
+        <com.jungly.gridpasswordview.GridPasswordView
+            android:id="@+id/num_password"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            app:gpvTextColor="@color/black"
+            app:gpvTextSize="20sp"
+            app:gpvLineWidth="1dp"
+            app:gpvPasswordLength="6"
+            app:gpvPasswordType="numberPassword"
+            android:visibility="visible"/>
+
+        <!-- 指纹验证 -->
+        <ImageView
+            android:id="@+id/finger_print_password"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:src="@mipmap/ic_finger_print"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+</LinearLayout>
