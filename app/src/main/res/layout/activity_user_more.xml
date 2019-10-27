@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMainBackground"
+    android:orientation="vertical">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back"/>
+
+    <!-- 账号信息 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_quai"
+        android:orientation="vertical">
+
+        <!-- 上传资质证书 -->
+        <RelativeLayout
+            android:id="@+id/upload_capacity_layout"
+            style="@style/me_common_item_relativeLayout_style">
+            <TextView
+                style="@style/more_common_item_textView_style"
+                android:text="上传资质证书"/>
+            <ImageView
+                style="@style/me_common_item_arrow_right_imageView_style"/>
+        </RelativeLayout>
+
+        <View
+            style="@style/me_horizontal_view_style"/>
+
+        <!-- 查看主页 -->
+        <RelativeLayout
+            android:id="@+id/check_homepage_layout"
+            style="@style/me_common_item_relativeLayout_style">
+            <TextView
+                style="@style/more_common_item_textView_style"
+                android:text="查看主页"/>
+            <ImageView
+                style="@style/me_common_item_arrow_right_imageView_style"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -27,4 +27,6 @@ public class AppConfig {
     public final static String REGISTER_USER = ANDROID_URL_PATH.concat("/checkRegister");
     // 获取用于基本信息
     public final static String USER_INFO = ANDROID_URL_PATH.concat("/getUserInfo");
+    // 获取基本信息
+    public static final String GET_USER_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetUserInfo");
 }

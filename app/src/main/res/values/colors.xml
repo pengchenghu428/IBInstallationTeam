@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
+    <color name="colorMainBackground">#F8F8F8</color>
+
     <color name="colorTextLight">@color/material_grey_50</color>
     <color name="colorTextDark">@color/material_grey_800</color>
 
@@ -28,5 +30,10 @@
     <color name="font_common_2">#a1a1a1</color>
     <color name="font_blue">#42369a</color>
     <color name="commom_background">#f3f3f3</color>
+
+    <!-- SearchView -->
+    <color name="colorDefault">#ffffff</color>
+    <color name="colorBackground">#f1f0f6</color>
+    <color name="colorText">#9b9b9b</color>
 
 </resources>

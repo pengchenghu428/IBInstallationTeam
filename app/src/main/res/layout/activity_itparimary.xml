@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMainBackground"
+    android:orientation="vertical">
+
+    <!-- header 登录状态 -->
+    <RelativeLayout
+        android:id="@+id/login_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/me_login_layout_height"
+        android:paddingLeft="@dimen/me_login_layout_paddingLeft"
+        android:background="@drawable/bg_round_white">
+
+        <!-- 头像 -->
+        <com.automation.ibinstallationteam.widget.image.SmartImageView
+            android:id="@+id/login_head"
+            android:layout_width="@dimen/me_login_head_width"
+            android:layout_height="@dimen/me_login_head_width"
+            android:layout_marginEnd="@dimen/me_login_head_marginEnd"
+            android:layout_centerVertical="true"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_default_user_head"/>
+        <!-- 账户信息 -->
+        <LinearLayout
+            android:id="@+id/login_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/login_head"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+            <!-- 用户姓名 -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/me_login_profile_layout_marginStart"
+                android:layout_marginLeft="@dimen/me_login_profile_layout_marginStart">
+                <!-- 姓名 -->
+                <TextView
+                    android:id="@+id/login_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:textColor="@color/black"
+                    android:text="XXX"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+                <!-- 等级 -->
+                <ImageView
+                    android:id="@+id/login_iv_level"
+                    android:layout_width="@dimen/me_login_level_width"
+                    android:layout_height="@dimen/me_login_level_height"
+                    android:layout_marginStart="@dimen/me_login_level_marginStart"
+                    android:layout_toRightOf="@+id/login_username"
+                    android:src="@mipmap/ic_level_0"/>
+            </RelativeLayout>
+
+            <!-- 职位信息 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/me_login_balance_layout_marginTop"
+                android:layout_marginStart="@dimen/me_login_profile_layout_marginStart">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="职位："
+                    android:textSize="@dimen/me_login_balance_size"/>
+                <TextView
+                    android:id="@+id/login_role"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="XXXX"
+                    android:textSize="@dimen/textSize_16"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 二维码图标 -->
+        <ImageView
+            android:id="@+id/login_qr_code"
+            android:layout_toLeftOf="@+id/login_right_arrow"
+            style="@style/me_common_item_qr_code_imageView_style"/>
+        <!-- 右箭头 -->
+        <ImageView
+            android:id="@+id/login_right_arrow"
+            style="@style/me_common_item_arrow_right_imageView_style"/>
+
+    </RelativeLayout>
+
+    <!-- 我页面详情 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- 功能模块 -->
+            <!-- 工作管理 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_white_quai"
+                android:orientation="horizontal">
+                <!-- 扫码出库 -->
+                <LinearLayout
+                    android:id="@+id/find_layout"
+                    style="@style/me_userLayout_linearLayout_style">
+                    <ImageView
+                        android:id="@+id/work_imageview"
+                        style="@style/me_userLayout_imageView_style"
+                        android:src="@mipmap/ic_installer_find"/>
+                    <TextView
+                        android:id="@+id/work_textview"
+                        style="@style/me_userLayout_textView_style1"
+                        android:text="发现"/>
+                </LinearLayout>
+                <View
+                    style="@style/me_vertical_view_style"/>
+                <!-- 吊篮异常上报 -->
+                <LinearLayout
+                    android:id="@+id/order_layout"
+                    style="@style/me_userLayout_linearLayout_style">
+
+                    <ImageView
+                        style="@style/me_userLayout_imageView_style"
+                        android:src="@mipmap/ic_installer_order" />
+                    <TextView
+                        style="@style/me_userLayout_textView_style1"
+                        android:text="订单"/>
+                </LinearLayout>
+                <View
+                    style="@style/me_vertical_view_style"/>
+                <!-- 消息 -->
+                <LinearLayout
+                    android:id="@+id/message_layout"
+                    style="@style/me_userLayout_linearLayout_style">
+                    <ImageView
+                        style="@style/me_userLayout_imageView_style"
+                        android:src="@mipmap/ic_installer_message"/>
+                    <TextView
+                        style="@style/me_userLayout_textView_style1"
+                        android:text="消息"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!--软件设置相关-->
+            <LinearLayout
+                style="@style/more_common_linearlayout_style">
+                <RelativeLayout
+                    android:id="@+id/more_item_comment_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="赏个好评"/>
+                    <ImageView
+                        style="@style/me_common_item_arrow_right_imageView_style"/>
+                </RelativeLayout>
+                <View
+                    style="@style/me_horizontal_view_style"/>
+                <RelativeLayout
+                    android:id="@+id/more_item_feedback_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="意见反馈"/>
+                    <ImageView
+                        style="@style/me_common_item_arrow_right_imageView_style"/>
+                </RelativeLayout>
+                <View
+                    style="@style/me_horizontal_view_style"/>
+                <RelativeLayout
+                    android:id="@+id/more_item_contact_kefu_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        android:id="@+id/contact_kefu"
+                        style="@style/more_common_item_textView_style"
+                        android:text="联系客服"/>
+                    <TextView
+                        style="@style/more_common_desc_textView_style"
+                        android:layout_alignParentEnd="false"
+                        android:layout_toRightOf="@+id/contact_kefu"
+                        android:layout_marginLeft="5dp"
+                        android:text="(8:00-17:00)"
+                        android:textSize="@dimen/textSize_14"/>
+                    <TextView
+                        android:id="@+id/more_item_tv_kefu"
+                        style="@style/more_common_desc_textView_style"
+                        android:text="15651851181"/>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!--检查更新关于等-->
+            <LinearLayout
+                style="@style/more_common_linearlayout_style">
+                <RelativeLayout
+                    android:id="@+id/more_item_check_update_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="检查更新"/>
+                    <TextView
+                        android:id="@+id/more_item_tv_current_version"
+                        style="@style/more_common_desc_textView_style"
+                        android:text="当前版本V1.0"/>
+                </RelativeLayout>
+                <View
+                    style="@style/me_horizontal_view_style"/>
+                <RelativeLayout
+                    android:id="@+id/more_item_about_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="关于"/>
+                    <ImageView
+                        style="@style/me_common_item_arrow_right_imageView_style"/>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!-- 退出登录等 -->
+            <LinearLayout
+                style="@style/more_common_linearlayout_style">
+
+                <RelativeLayout
+                    android:id="@+id/more_item_log_out_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="退出登录"/>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

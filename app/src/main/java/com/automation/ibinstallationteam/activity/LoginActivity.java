@@ -70,8 +70,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case LOGONIN_SUCCESS:  // 登陆成功
-//                    startActivity(new Intent(LoginActivity.this, ITParimaryActivity.class));
-                    startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                    startActivity(new Intent(LoginActivity.this, ITParimaryActivity.class));
                     break;
                 case LOGONIN_REGISTER_NOT_ALLOW: // 注册未审核
                     mCommonDialog = initDialog(getString(R.string.dialog_login_audit));

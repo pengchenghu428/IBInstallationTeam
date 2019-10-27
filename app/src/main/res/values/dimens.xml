@@ -35,4 +35,21 @@
     <dimen name="size_23">17.0sp</dimen>
     <dimen name="size_24">19.0sp</dimen>
     <dimen name="size_50">50.0sp</dimen>
+
+    <!-- 用户主页面管理 -->
+    <dimen name="me_login_layout_height">120dp</dimen>
+    <dimen name="me_login_head_width">65dp</dimen>
+    <dimen name="me_login_head_height">60dp</dimen>
+    <dimen name="me_login_layout_paddingLeft">15dp</dimen>
+    <dimen name="me_login_head_marginEnd">10dp</dimen>
+    <dimen name="me_login_level_width">28dp</dimen>
+    <dimen name="me_login_level_height">22dp</dimen>
+    <dimen name="me_login_profile_layout_marginStart">10dp</dimen>
+    <dimen name="me_login_level_marginStart">5dp</dimen>
+    <dimen name="me_login_balance_layout_marginTop">5dp</dimen>
+    <dimen name="me_login_username_size">@dimen/textSize_20</dimen>
+    <dimen name="me_login_balance_size">@dimen/textSize_16</dimen>
+    <dimen name="me_nologin_textSize">@dimen/textSize_14</dimen>
+    <dimen name="me_item_common_layout_marginTop">10dp</dimen>
+
 </resources>

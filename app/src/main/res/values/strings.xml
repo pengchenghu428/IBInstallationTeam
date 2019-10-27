@@ -31,6 +31,9 @@
     <string name="dialog_cancel">取消</string>
     <string name="dialog_submit">确认</string>
 
+    <!-- capture activity -->
+    <string name="scanning">扫一扫</string>
+
     <!-- dialog_verify_action -->
     <string name="input_operate_password">请输入操作密码</string>
     <string name="input_finger_print">请验证指纹</string>
@@ -39,5 +42,6 @@
     <string name="open_basket">扫码上工</string>
     <string name="close_basket">扫码下工</string>
     <string name="password_error">密码错误！请重新输入</string>
+    <string name="title_activity_search_project">SearchProjectActivity</string>
 
 </resources>
