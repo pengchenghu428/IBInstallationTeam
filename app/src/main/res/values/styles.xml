@@ -299,7 +299,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:padding">3dp</item>
+        <item name="android:padding">2dp</item>
     </style>
     <!-- 工单名称：大字体 -->
     <style name="ItemNameTextView">
@@ -324,7 +324,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:textColor">@color/black</item>
-        <item name="android:gravity">right|center_vertical</item>
+        <item name="android:gravity">center|center_vertical</item>
     </style>
     <!-- 内容字段 -->
     <style name="ItemContent2TextView">
@@ -338,7 +338,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
         <item name="android:textColor">@color/black</item>
-        <item name="android:gravity">right|center_vertical</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="android:scaleType">fitCenter</item>
     </style>
 

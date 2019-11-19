@@ -25,8 +25,9 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
 
     private Context mContext;
     private List<Basket> mBasketList;
+    private OnItemClickListener mOnItemClickListener;  // 消息监听
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         View mView;
         SmartImageView ivLogo;  // logo
         TextView tvId;  // 吊篮名称
@@ -34,7 +35,9 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
         ImageView ivFinishImg;  // 总数目
         ImageView ivDeviceBound;  // 日期提示
 
-        public ViewHolder(@NonNull View itemView) {
+        private OnItemClickListener onItemClickListener;
+
+        public ViewHolder(@NonNull View itemView, final BasketAdapter.OnItemClickListener onItemClickListener) {
             super(itemView);
 
             // 控件初始化
@@ -44,6 +47,16 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
             ivWorkerInfo = itemView.findViewById(R.id.worker_info_iv);
             ivFinishImg = itemView.findViewById(R.id.finish_img_iv);
             ivDeviceBound = itemView.findViewById(R.id.device_bound_iv);
+
+            // 消息监听
+            this.onItemClickListener = onItemClickListener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            // getpostion()为Viewholder自带的一个方法，用来获取RecyclerView当前的位置，将此作为参数，传出去
+            onItemClickListener.onItemClick(v, getAdapterPosition());
         }
     }
 
@@ -58,7 +71,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     @Override
     public BasketAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_basket,viewGroup,false);
-        final BasketAdapter.ViewHolder holder = new BasketAdapter.ViewHolder(view);
+        final BasketAdapter.ViewHolder holder = new BasketAdapter.ViewHolder(view, mOnItemClickListener);
         return holder;
     }
 
@@ -86,5 +99,24 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return mBasketList.size();
+    }
+
+    /*
+     * 设置监听
+     */
+    public void setOnItemClickListener(BasketAdapter.OnItemClickListener mOnItemClickListener) {
+        this.mOnItemClickListener = mOnItemClickListener;
+    }
+
+    /*
+     * 点击接口函数
+     */
+    public interface OnItemClickListener {
+        /**
+         * 当RecyclerView某个被点击的时候回调
+         * @param view 点击item的视图
+         * @param position 点击得到位置
+         */
+        public void onItemClick(View view, int position);
     }
 }

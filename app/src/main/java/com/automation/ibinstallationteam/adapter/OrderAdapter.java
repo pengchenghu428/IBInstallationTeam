@@ -25,8 +25,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     private Context mContext;
     private List<Order> mOrderList;
+    private OnItemClickListener mOnItemClickListener;  // 消息监听
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         View mView;
         SmartImageView ivLogo;  // logo
         TextView tvName;  // 工单名称
@@ -35,7 +36,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         TextView tvDateHint;  // 日期提示
         TextView tvDateContent;  // 具体日期
 
-        public ViewHolder(@NonNull View itemView) {
+        private OnItemClickListener onItemClickListener;
+
+        public ViewHolder(@NonNull View itemView, final OrderAdapter.OnItemClickListener onItemClickListener) {
             super(itemView);
 
             // 控件初始化
@@ -46,6 +49,16 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             tvTotal = itemView.findViewById(R.id.total_num_tv);
             tvDateHint = itemView.findViewById(R.id.order_date_hint_tv);
             tvDateContent = itemView.findViewById(R.id.order_date_content_tv);
+
+            // 消息监听
+            this.onItemClickListener = onItemClickListener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            // getpostion()为Viewholder自带的一个方法，用来获取RecyclerView当前的位置，将此作为参数，传出去
+            onItemClickListener.onItemClick(v, getAdapterPosition());
         }
     }
 
@@ -60,7 +73,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     @Override
     public OrderAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_order,viewGroup,false);
-        final ViewHolder holder = new ViewHolder(view);
+        final ViewHolder holder = new ViewHolder(view, mOnItemClickListener);
         return holder;
     }
 
@@ -81,5 +94,24 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return mOrderList.size();
+    }
+
+    /*
+     * 设置监听
+     */
+    public void setOnItemClickListener(OrderAdapter.OnItemClickListener mOnItemClickListener) {
+        this.mOnItemClickListener = mOnItemClickListener;
+    }
+
+    /*
+     * 点击接口函数
+     */
+    public interface OnItemClickListener {
+        /**
+         * 当RecyclerView某个被点击的时候回调
+         * @param view 点击item的视图
+         * @param position 点击得到位置
+         */
+        public void onItemClick(View view, int position);
     }
 }

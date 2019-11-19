@@ -28,7 +28,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.InstallManageActivity"></activity>
+        <activity android:name=".activity.MultiImgUploadActivity"></activity>
+        <activity android:name=".activity.SingleImgUploadActivity" />
+        <activity android:name=".activity.FinishImgActivity" />
+        <activity android:name=".activity.BasketActivity" />
+        <activity android:name=".activity.InstallManageActivity" />
         <activity android:name=".activity.OrderActivity" />
         <activity android:name=".activity.ProjectDetailsActivity" />
         <activity

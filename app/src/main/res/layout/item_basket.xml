@@ -2,16 +2,17 @@
 <!-- 吊篮子项 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="100dp"
     android:orientation="horizontal"
-    android:padding="5dp">
+    android:layout_margin="5dp">
 
     <!-- 图片：放置电柜的图片，如果没有放置百安胜的图片 -->
     <com.automation.ibinstallationteam.widget.image.SmartImageView
         android:id="@+id/basket_logo_smartImg"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight="1"
+        android:layout_margin="5dp"
         android:src="@mipmap/ic_baiansheng"
         android:scaleType="fitCenter"/>
 
@@ -19,7 +20,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
+        android:layout_weight="2"
         android:orientation="vertical"
         android:layout_gravity="center_vertical">
 

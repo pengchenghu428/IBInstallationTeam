@@ -4,14 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:orientation="horizontal"
-    android:padding="5dp">
+    android:layout_margin="5dp"
+    android:background="@color/white">
 
     <!-- 图片：可以放置公司logo，目前设定为百安胜 -->
     <com.automation.ibinstallationteam.widget.image.SmartImageView
         android:id="@+id/company_logo_smartImg"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight="1"
+        android:padding="5dp"
         android:src="@mipmap/ic_baiansheng"
         android:scaleType="fitCenter"/>
 
@@ -19,7 +21,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
+        android:layout_weight="2"
         android:orientation="vertical"
         android:layout_gravity="center_vertical">
 
@@ -41,7 +43,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center_vertical">
+                android:gravity="center">
                 <TextView
                     android:id="@+id/finish_num_tv"
                     style="@style/ItemContent2TextView"
