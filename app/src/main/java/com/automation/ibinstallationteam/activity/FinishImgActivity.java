@@ -1,6 +1,7 @@
 package com.automation.ibinstallationteam.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -88,7 +89,15 @@ public class FinishImgActivity extends AppCompatActivity {
         mPortionGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                if (position < 4){
+                    // 上传单张图片
+                    Intent intent = new Intent(FinishImgActivity.this, SingleImgUploadActivity.class);
+                    startActivity(intent);
+                }else{
+                    // 上传左、右图片
+                    Intent intent = new Intent(FinishImgActivity.this, MultiImgUploadActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }

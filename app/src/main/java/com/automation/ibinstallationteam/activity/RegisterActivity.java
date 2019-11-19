@@ -343,7 +343,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (Build.VERSION.SDK_INT < 24) // 低于Android 7.0 ，将file转换为uri对象
             imageUri = Uri.fromFile(photo_file);
         else { // FileProvider —— 内容提供器
-            imageUri = FileProvider.getUriForFile(this, "com.automation.ibinstallationteam.fileprovider", photo_file);
+            imageUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", photo_file);
             openCameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // 添加这一句表示对目标应用临时授权该Uri所代表的文件
             openCameraIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);// 设置Action为拍照
         }
