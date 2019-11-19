@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back" />
+
+
+    <!-- 项目基本信息 -->
+    <TextView
+        android:text="项目基本信息"
+        style="@style/content_title_textview"/>
+    <LinearLayout
+        android:id="@+id/project_bsae_info"
+        style="@style/more_common_linearlayout_style"
+        android:layout_marginTop="0dp">
+        <!-- 项目编号 -->
+        <RelativeLayout
+            android:id="@+id/project_id_layout"
+            style="@style/me_common_item_relativeLayout_style"
+            android:clickable="false">
+            <TextView
+                style="@style/more_common_item_textView_style"
+                android:text="项目编号"/>
+            <TextView
+                android:id="@+id/project_id_textview"
+                style="@style/more_common_desc_textView_style"
+                android:text="NJ20180129136"/>
+        </RelativeLayout>
+        <View
+            style="@style/me_horizontal_view_style"/>
+
+        <!-- 项目名称 -->
+        <RelativeLayout
+            android:id="@+id/project_name_layout"
+            style="@style/me_common_item_relativeLayout_style"
+            android:clickable="false">
+            <TextView
+                style="@style/more_common_item_textView_style"
+                android:text="项目名称"/>
+            <TextView
+                android:id="@+id/project_name_textview"
+                style="@style/more_common_desc_textView_style"
+                android:text="南京凤凰国际大厦"/>
+        </RelativeLayout>
+        <View
+            style="@style/me_horizontal_view_style"/>
+
+        <!-- 开始日期-->
+        <RelativeLayout
+            android:id="@+id/project_start_time_layout"
+            style="@style/me_common_item_relativeLayout_style"
+            android:clickable="false">
+            <TextView
+                style="@style/more_common_item_textView_style"
+                android:text="开始日期"/>
+            <TextView
+                android:id="@+id/project_start_time_textview"
+                style="@style/more_common_desc_textView_style"
+                android:text="2019-03-15 12:30"/>
+        </RelativeLayout>
+        <View
+            style="@style/me_horizontal_view_style"/>
+
+        <!-- 开始日期-->
+        <RelativeLayout
+            android:id="@+id/project_ready_install_layout"
+            style="@style/me_common_item_relativeLayout_style"
+            android:clickable="false">
+            <TextView
+                style="@style/more_common_item_textView_style"
+                android:text="待安装吊篮数"/>
+            <TextView
+                android:id="@+id/project_ready_install_textview"
+                style="@style/more_common_desc_textView_style"
+                android:text="0"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!-- 请求安装 -->
+    <Button
+        android:id="@+id/apply_for_installation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:textSize="@dimen/textSize_16"
+        android:text="申请安装"
+        android:background="@color/colorPrimary"/>
+
+</LinearLayout>

@@ -132,7 +132,7 @@
                         android:src="@mipmap/ic_installer_order" />
                     <TextView
                         style="@style/me_userLayout_textView_style1"
-                        android:text="订单"/>
+                        android:text="工单"/>
                 </LinearLayout>
                 <View
                     style="@style/me_vertical_view_style"/>

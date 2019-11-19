@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMainBackground">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back"
+        android:id="@+id/toolbar"/>
+
+    <!-- 功能区 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_white_quai"
+        android:orientation="horizontal"
+        android:layout_below="@+id/toolbar">
+
+        <!-- 施工人员信息 -->
+        <LinearLayout
+            android:id="@+id/worker_info_layout"
+            style="@style/me_userLayout_linearLayout_style">
+            <ImageView
+                style="@style/me_userLayout_imageView_style"
+                android:src="@mipmap/ic_worker_info"/>
+            <TextView
+                android:id="@+id/work_textview"
+                style="@style/me_userLayout_textView_style1"
+                android:text="人员信息"/>
+        </LinearLayout>
+        <View
+            style="@style/me_vertical_view_style"/>
+        <!-- 完工图片 -->
+        <LinearLayout
+            android:id="@+id/finish_img_layout"
+            style="@style/me_userLayout_linearLayout_style">
+            <ImageView
+                style="@style/me_userLayout_imageView_style"
+                android:src="@mipmap/ic_finish_image"/>
+            <TextView
+                style="@style/me_userLayout_textView_style1"
+                android:text="完工图片"/>
+        </LinearLayout>
+        <View
+            style="@style/me_vertical_view_style"/>
+        <!-- 消息 -->
+        <LinearLayout
+            android:id="@+id/device_bound_layout"
+            style="@style/me_userLayout_linearLayout_style">
+            <ImageView
+                style="@style/me_userLayout_imageView_style"
+                android:src="@mipmap/ic_device_bound"/>
+            <TextView
+                style="@style/me_userLayout_textView_style1"
+                android:text="设备绑定"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 确认提交 -->
+    <Button
+        android:id="@+id/confirm_apply_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:text="确认提交"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textSize_18"/>
+
+</RelativeLayout>

@@ -29,4 +29,11 @@ public class AppConfig {
     public final static String USER_INFO = ANDROID_URL_PATH.concat("/getUserInfo");
     // 获取基本信息
     public static final String GET_USER_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetUserInfo");
+
+    /*
+     * 项目相关
+     */
+    // 获取项目详情
+    public static final String GET_PROJECT_INFO = ANDROID_URL_PATH.concat("/projectDetailInfo");
+    public static final String GET_BASKET_LIST_INFO = ANDROID_URL_PATH.concat("/getBasketList");
 }

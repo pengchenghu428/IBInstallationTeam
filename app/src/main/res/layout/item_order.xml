@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 工单子项 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+    <!-- 图片：可以放置公司logo，目前设定为百安胜 -->
+    <com.automation.ibinstallationteam.widget.image.SmartImageView
+        android:id="@+id/company_logo_smartImg"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:src="@mipmap/ic_baiansheng"
+        android:scaleType="fitCenter"/>
+
+    <!-- 工单信息，包括：名称、状态、（预计）完成时间 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+
+        <!-- 工单名称 -->
+        <LinearLayout
+            style="@style/ItemLinearLayout">
+            <TextView
+                android:id="@+id/name_iv"
+                style="@style/ItemNameTextView"
+                android:text="南京市玄武区红豆集团-香江豪庭第十八期玻璃幕墙"/>
+        </LinearLayout>
+        <!-- 当前状态 -->
+        <LinearLayout
+            style="@style/ItemLinearLayout">
+            <TextView style="@style/ItemHintTextView"
+                android:id="@+id/order_state_tv"
+                android:text="订单完成度："/>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical">
+                <TextView
+                    android:id="@+id/finish_num_tv"
+                    style="@style/ItemContent2TextView"
+                    android:layout_toLeftOf="@+id/split_tv"
+                    android:text="14"
+                    android:textColor="@color/red"/>
+                <TextView
+                    android:id="@+id/split_tv"
+                    style="@style/ItemContent2TextView"
+                    android:layout_toLeftOf="@+id/total_num_tv"
+                    android:text="/"/>
+                <TextView
+                    android:id="@+id/total_num_tv"
+                    style="@style/ItemContent2TextView"
+                    android:layout_alignParentRight="true"
+                    android:text="20"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+        <!-- 日期 -->
+        <LinearLayout
+            style="@style/ItemLinearLayout">
+            <TextView style="@style/ItemHintTextView"
+                android:id="@+id/order_date_hint_tv"
+                android:text="预计完成日期："/>
+            <TextView style="@style/ItemContentTextView"
+                android:id="@+id/order_date_content_tv"
+                android:text="2019/10/18"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

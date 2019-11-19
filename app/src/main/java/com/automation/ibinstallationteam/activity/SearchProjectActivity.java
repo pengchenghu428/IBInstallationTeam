@@ -42,9 +42,9 @@ public class SearchProjectActivity extends AppCompatActivity {
                 /*
                  * 这边需要添加对字符串的一些检查
                  */
-//                Intent intent = new Intent(SearchProjectActivity.this, OutAndInStorageActivity.class);
-//                intent.putExtra(PROJECT_ID, projectId);
-//                startActivity(intent);
+                Intent intent = new Intent(SearchProjectActivity.this, ProjectDetailsActivity.class);
+                intent.putExtra(PROJECT_ID, projectId);
+                startActivity(intent);
             }
         });
         // 设置点击返回按键后的操作（通过回调接口）

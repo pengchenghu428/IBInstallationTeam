@@ -28,10 +28,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.InstallManageActivity"></activity>
+        <activity android:name=".activity.OrderActivity" />
+        <activity android:name=".activity.ProjectDetailsActivity" />
         <activity
             android:name=".activity.SearchProjectActivity"
             android:label="@string/title_activity_search_project"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.UserMoreActivity" />
         <activity android:name=".activity.PersonalInformationActivity" />
         <activity android:name=".activity.WelcomeActivity">

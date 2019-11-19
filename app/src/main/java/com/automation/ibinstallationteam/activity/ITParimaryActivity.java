@@ -144,8 +144,9 @@ public class ITParimaryActivity extends AppCompatActivity implements View.OnClic
                 Log.i(TAG, "You have clicked open/close work button");
                 startActivity(new Intent(ITParimaryActivity.this, SearchProjectActivity.class));
                 break;
-            case R.id.order_layout:  // 订单页面
+            case R.id.order_layout:  // 工单页面
                 Log.i(TAG, "You have clicked order button");
+                startActivity(new Intent(ITParimaryActivity.this, OrderActivity.class));
                 break;
             case R.id.message_layout:  // 消息
                 Log.i(TAG, "You have clicked message button");
