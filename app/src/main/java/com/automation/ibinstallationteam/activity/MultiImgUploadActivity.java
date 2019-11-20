@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import com.automation.ibinstallationteam.R;
 import com.automation.ibinstallationteam.application.AppConfig;
+import com.automation.ibinstallationteam.entity.PortionMap;
+import com.automation.ibinstallationteam.utils.ToastUtil;
 import com.automation.ibinstallationteam.utils.ftp.FTPUtil;
 import com.automation.ibinstallationteam.widget.dialog.LoadingDialog;
 import com.automation.ibinstallationteam.widget.image.SmartImageView;
@@ -64,17 +66,24 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
     private Button mRightUploadBtn;
 
     // 全局变量
+    private String projectId;  // 项目
+    private String basketId;  // 吊篮
+    private int imageType;  // 图片类型
+
     private String mUploadImageType = "提升机";  // 上传图片类型，如提升机、安全锁等；
+    private String remoteFileName; // 远程文件名
     private String leftFileName;  // 左图片名
     private File leftPhotoFile ; // 图片文件
     private Uri leftPhotoUrl ; // 图片URL
+    private String leftRemoteFileUrl;
     private String rightFileName;  // 右图片名
     private File rightPhotoFile ; // 图片文件
     private Uri rightPhotoUrl ; // 图片URL
+    private String rightRemoteFileUrl;
 
     // FTP 文件服务器
     private FTPUtil mFTPClient;
-    private String mRemotePath = "project/201910110001/20191011001/";
+    private String mRemotePath;
     private LoadingDialog mLoadingDialog;
 
     @SuppressLint("HandlerLeak")
@@ -83,7 +92,6 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
             switch (msg.what) {
                 case UPLODA_IMAGE_SUCCESS_MSG:
                     mLoadingDialog.dismiss();
-                    finish();
                     break;
                 case UPLODA_IMAGE_FAILURED_MSG:
                     mLoadingDialog.dismiss();
@@ -99,6 +107,7 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
 
         if(!isHasPermission()) requestPermission();
 
+        initIntent();
         initWidgets();
         initFTPClient(); // 初始化文件服务器
     }
@@ -115,6 +124,7 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
         mLeftUploadImageIv = (SmartImageView) findViewById(R.id.left_image_display_iv);
+        mLeftUploadImageIv.setImageUrl(leftRemoteFileUrl, R.mipmap.ic_add_upload_image);
         mLeftUploadImageIv.setOnClickListener(this);
         mLeftUploadImageIv.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -127,6 +137,7 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
         mLeftUploadBtn.setOnClickListener(this);
 
         mRightUploadImageIv = (SmartImageView) findViewById(R.id.right_image_display_iv);
+        mRightUploadImageIv.setImageUrl(rightRemoteFileUrl, R.mipmap.ic_add_upload_image);
         mRightUploadImageIv.setOnClickListener(this);
         mRightUploadImageIv.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -150,12 +161,20 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
             case R.id.left_image_display_iv:  // 点击图片，查看大图，尚未完成
                 break;
             case R.id.left_upload_btn:
+                if(leftPhotoFile==null){
+                    ToastUtil.showToastTips(MultiImgUploadActivity.this, "该图片已上传");
+                    break;
+                }
                 mLoadingDialog.show();
                 startSendImage("left");  // 上传图片
                 break;
             case R.id.right_image_display_iv:  // 点击图片，查看大图，尚未完成
                 break;
             case R.id.right_upload_btn:
+                if(rightPhotoFile==null){
+                    ToastUtil.showToastTips(MultiImgUploadActivity.this, "该图片已上传");
+                    break;
+                }
                 mLoadingDialog.show();
                 startSendImage("right");  // 上传图片
                 break;
@@ -228,6 +247,18 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
     /*
      * 工具类
      */
+    // 页面传递数据
+    private void initIntent(){
+        Intent intent = getIntent();
+        projectId = intent.getStringExtra(FinishImgActivity.PROJECT_ID);
+        basketId = intent.getStringExtra(FinishImgActivity.BASKET_ID);
+        imageType = intent.getIntExtra(FinishImgActivity.IMAGE_TYPE_ID, -1);
+        mRemotePath = "project/" + projectId + "/" + basketId + "/";  // 图片上传地址
+        mUploadImageType = PortionMap.chinesePortion.get(imageType);
+        remoteFileName = PortionMap.englishPortion.get(imageType);
+        leftRemoteFileUrl = AppConfig.FILE_SERVER_YBLIU_PATH + mRemotePath + remoteFileName + "_left.jpg";
+        rightRemoteFileUrl = AppConfig.FILE_SERVER_YBLIU_PATH + mRemotePath + remoteFileName + "_right.jpg";
+    }
     // 照相机
     public void startCameraActivity(String type) {
         Intent intent =  new Intent(MediaStore.ACTION_IMAGE_CAPTURE);   //跳转至拍照页面
@@ -299,18 +330,18 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
         final String fileName;
         if (type.equals("left")){
             photoFile = leftPhotoFile;
-            fileName = "elevator" + "_left.jpg";
+            fileName = remoteFileName + "_left.jpg";
         }else{
             photoFile = rightPhotoFile;
-            fileName = "elevator" + "_right.jpg";
+            fileName = remoteFileName + "_right.jpg";
         }
+
         new Thread() {
             public void run() {
                 try {
                     // 上传文件
                     mFTPClient.openConnect();  // 建立连接
                     mFTPClient.uploadingInit(mRemotePath); // 上传文件初始化
-
                     mFTPClient.uploadingSingleRenameFile(photoFile, fileName);  // 上传图片
                     mFTPClient.closeConnect();  // 关闭连接
                     mHandler.sendEmptyMessage(UPLODA_IMAGE_SUCCESS_MSG);

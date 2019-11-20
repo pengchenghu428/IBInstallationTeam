@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.automation.ibinstallationteam.R;
 import com.automation.ibinstallationteam.application.AppConfig;
+import com.automation.ibinstallationteam.entity.PortionMap;
+import com.automation.ibinstallationteam.utils.ToastUtil;
 import com.automation.ibinstallationteam.utils.ftp.FTPUtil;
 import com.automation.ibinstallationteam.widget.dialog.LoadingDialog;
 import com.automation.ibinstallationteam.widget.dialog.ProgressAlertDialog;
@@ -65,14 +67,20 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
     private Button mUploadBtn;
 
     // 全局变量
-    private String mUploadImageType = "电柜";  // 上传图片类型，如电柜、摄像头等；
+    private String projectId;  // 项目
+    private String basketId;  // 吊篮
+    private int imageType;  // 图片类型
+
+    private String mUploadImageType;  // 上传图片类型，如电柜、摄像头等；
     private String fileName;  // 图片名
+    private String remoteFileName; // 远程文件名
+    private String remoteFileUrl;
     private File photoFile ; // 图片文件
     private Uri photoUrl ; // 图片URL
 
     // FTP 文件服务器
     private FTPUtil mFTPClient;
-    private String mRemotePath = "project/201910110001/20191011001/";
+    private String mRemotePath;
     private LoadingDialog mLoadingDialog;
 
     @SuppressLint("HandlerLeak")
@@ -96,6 +104,7 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_single_img_upload);
         if(!isHasPermission()) requestPermission();
 
+        initIntent();
         initWidgets();
         initFTPClient(); // 初始化文件服务器
     }
@@ -112,6 +121,7 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
         mUploadImageIv = (SmartImageView) findViewById(R.id.image_display_iv);
+        mUploadImageIv.setImageUrl(remoteFileUrl, R.mipmap.ic_add_upload_image);
         mUploadImageIv.setOnClickListener(this);
         mUploadImageIv.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -136,6 +146,10 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
             case R.id.image_display_iv:  // 点击图片，查看大图，尚未完成
                 break;
             case R.id.upload_btn:
+                if(photoFile == null) {
+                    ToastUtil.showToastTips(SingleImgUploadActivity.this, "该图片已上传");
+                    break;
+                }
                 mLoadingDialog.show();
                 startSendImage();  // 上传图片
                 break;
@@ -186,6 +200,17 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
     /*
      * 工具类
      */
+    // 页面传递数据
+    private void initIntent(){
+        Intent intent = getIntent();
+        projectId = intent.getStringExtra(FinishImgActivity.PROJECT_ID);
+        basketId = intent.getStringExtra(FinishImgActivity.BASKET_ID);
+        imageType = intent.getIntExtra(FinishImgActivity.IMAGE_TYPE_ID, -1);
+        mRemotePath = "project/" + projectId + "/" + basketId + "/";  // 图片上传地址
+        mUploadImageType = PortionMap.chinesePortion.get(imageType);
+        remoteFileName = PortionMap.englishPortion.get(imageType);
+        remoteFileUrl = AppConfig.FILE_SERVER_YBLIU_PATH + mRemotePath + remoteFileName + ".jpg";
+    }
     // 照相机
     public void startCameraActivity() {
         Intent intent =  new Intent(MediaStore.ACTION_IMAGE_CAPTURE);   //跳转至拍照页面
@@ -200,8 +225,7 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUrl);
         startActivityForResult(intent, TAKE_PHOTO_FROM_CAMERA);
     }
-    // 压缩图像
-    // 进行Luban算法压缩图片
+    // Luban算法压缩图片
     private void compressImage(final String filePath, final String savePath){
         runOnUiThread(new Runnable() {
             @Override
@@ -248,7 +272,7 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
                     // 上传文件
                     mFTPClient.openConnect();  // 建立连接
                     mFTPClient.uploadingInit(mRemotePath); // 上传文件初始化
-                    mFTPClient.uploadingSingleRenameFile(photoFile, "electrical_box.jpg");  // 上传图片
+                    mFTPClient.uploadingSingleRenameFile(photoFile, remoteFileName + ".jpg");  // 上传图片
                     mFTPClient.closeConnect();  // 关闭连接
                     mHandler.sendEmptyMessage(UPLODA_IMAGE_SUCCESS_MSG);
                 } catch (IOException e) {

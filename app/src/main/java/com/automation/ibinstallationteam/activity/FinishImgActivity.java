@@ -14,13 +14,19 @@ import android.widget.TextView;
 
 import com.automation.ibinstallationteam.R;
 import com.automation.ibinstallationteam.adapter.PortionAdapter;
+import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.Portion;
+import com.automation.ibinstallationteam.entity.PortionMap;
+import com.automation.ibinstallationteam.utils.ftp.FTPUtil;
 import com.automation.ibinstallationteam.widget.SmartGridView;
 import com.scwang.smartrefresh.header.BezierCircleHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import org.apache.commons.net.ftp.FTPFile;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +37,18 @@ public class FinishImgActivity extends AppCompatActivity {
 
     private static final String TAG = "FinishImgActivity";
 
+    // 消息处理变量
+    private static final int UPDATE_IMAGE_STATE_MSG = 101;
+
+    // 页面跳转全局变量
+    public static final String PROJECT_ID = "project_id";  // 项目ID
+    public static final String BASKET_ID = "basket_id";  // 吊篮ID
+    public static final String IMAGE_TYPE_ID = "image_type_id";  // 上传图片类型
+
+    // 全局变量
+    private String projectId = "201910110001";
+    private String basketId = "201910110001";
+
     // 控件声明
     private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
     private SmartGridView mPortionGv;  // 部件网格控件
@@ -39,11 +57,18 @@ public class FinishImgActivity extends AppCompatActivity {
     private List<Portion> mPortions;  // 部件变量列表
     private PortionAdapter mPortionAdapter;  // 部件变量适配器
 
+    // FTP 文件服务器
+    private FTPUtil mFTPClient;
+    private String mRemotePath;
+
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
+                case UPDATE_IMAGE_STATE_MSG:
+                    mPortionAdapter.notifyDataSetChanged();
+                    break;
                 default: break;
             }
         }
@@ -55,6 +80,7 @@ public class FinishImgActivity extends AppCompatActivity {
         setContentView(R.layout.activity_finish_img);
 
         initWidgets();
+        initFTPClient();
     }
 
     /* 初始化控件
@@ -92,10 +118,16 @@ public class FinishImgActivity extends AppCompatActivity {
                 if (position < 4){
                     // 上传单张图片
                     Intent intent = new Intent(FinishImgActivity.this, SingleImgUploadActivity.class);
+                    intent.putExtra(PROJECT_ID, projectId);
+                    intent.putExtra(BASKET_ID, basketId);
+                    intent.putExtra(IMAGE_TYPE_ID, position);
                     startActivity(intent);
                 }else{
                     // 上传左、右图片
                     Intent intent = new Intent(FinishImgActivity.this, MultiImgUploadActivity.class);
+                    intent.putExtra(PROJECT_ID, projectId);
+                    intent.putExtra(BASKET_ID, basketId);
+                    intent.putExtra(IMAGE_TYPE_ID, position);
                     startActivity(intent);
                 }
             }
@@ -114,6 +146,54 @@ public class FinishImgActivity extends AppCompatActivity {
     }
 
     /*
+     * 后台通信
+     */
+    // 检查文件是否存在
+    private void checkImageExist(){
+        mRemotePath = "project/" + projectId + "/" + basketId;  // 图片上传地址
+        new Thread() {
+            public void run() {
+                try {
+                    // 上传文件
+                    mFTPClient.openConnect();  // 建立连接
+                    mFTPClient.uploadingInit(mRemotePath); // 上传文件初始化
+                    List<String>  filenames = mFTPClient.listCurrentFileNames();
+                    for (int idx=0; idx<PortionMap.englishPortion.size(); idx++){
+                        if (filenames.contains(PortionMap.englishPortion.get(idx) + ".jpg")){
+                            mPortions.get(idx).setState(1);
+                            continue;
+                        }
+                        if(filenames.contains(PortionMap.englishPortion.get(idx) + "_left.jpg") &&
+                                filenames.contains(PortionMap.englishPortion.get(idx) + "_right.jpg")){
+                            mPortions.get(idx).setState(1);
+                            continue;
+                        }
+                        mPortions.get(idx).setState(0);
+                    }
+                    mFTPClient.closeConnect();  // 关闭连接
+                    mHandler.sendEmptyMessage(UPDATE_IMAGE_STATE_MSG);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+    // FTP 初始化
+    private void initFTPClient(){
+        mFTPClient = new FTPUtil(AppConfig.FILE_SERVER_YBLIU_IP, AppConfig.FILE_SERVER_YBLIU_PORT,
+                AppConfig.FILE_SERVER_USERNAME, AppConfig.FILE_SERVER_PASSWORD);
+    }
+
+    /*
+     * 生命周期
+     */
+    @Override
+    public void onResume(){
+        super.onResume();
+        checkImageExist();
+    }
+
+    /*
      * 其它函数
      */
     // 初始化部件列表
@@ -125,17 +205,17 @@ public class FinishImgActivity extends AppCompatActivity {
         mPortions.add(camera);
         Portion safeRope = new Portion("安全绳", R.mipmap.ic_safe_rope, 0);
         mPortions.add(safeRope);
-        Portion cable = new Portion("电缆", R.mipmap.ic_cable, 1);
+        Portion cable = new Portion("电缆", R.mipmap.ic_cable, 0);
         mPortions.add(cable);
         Portion elevator = new Portion("提升机", R.mipmap.ic_elevator, 0);
         mPortions.add(elevator);
         Portion safeLock = new Portion("安全锁", R.mipmap.ic_safe_lock, 0);
         mPortions.add(safeLock);
-        Portion mainSteel = new Portion("主钢丝", R.mipmap.ic_main_steel, 1);
+        Portion mainSteel = new Portion("主钢丝", R.mipmap.ic_main_steel, 0);
         mPortions.add(mainSteel);
         Portion sideSteel = new Portion("副钢丝", R.mipmap.ic_side_steel, 0);
         mPortions.add(sideSteel);
-        Portion heavyPunch = new Portion("重锤", R.mipmap.ic_heavy_punch, 1);
+        Portion heavyPunch = new Portion("重锤", R.mipmap.ic_heavy_punch, 0);
         mPortions.add(heavyPunch);
         Portion limitPosition = new Portion("上限位器", R.mipmap.ic_limit_position, 0);
         mPortions.add(limitPosition);
@@ -143,7 +223,7 @@ public class FinishImgActivity extends AppCompatActivity {
         mPortions.add(weighingMachine);
         Portion bigArm = new Portion("大臂", R.mipmap.ic_big_arm, 0);
         mPortions.add(bigArm);
-        Portion balanceWeight = new Portion("配重", R.mipmap.ic_balance_weight, 1);
+        Portion balanceWeight = new Portion("配重", R.mipmap.ic_balance_weight, 0);
         mPortions.add(balanceWeight);
     }
 }
