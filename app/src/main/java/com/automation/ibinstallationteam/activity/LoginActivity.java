@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView titleText = (TextView) findViewById(R.id.toolbar_title);
         toolbar.setTitle("");
-        titleText.setText("百安胜安装队-登录");
+        titleText.setText("登录");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); //设置返回键可用
 

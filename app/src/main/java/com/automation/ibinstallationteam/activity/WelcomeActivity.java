@@ -50,6 +50,7 @@ public class WelcomeActivity extends AppCompatActivity {
             public void run() {
                 if(mToken.isEmpty() || mToken.equals("")){  // 跳转到登录注册页面
                     startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
+//                    startActivity(new Intent(WelcomeActivity.this, ITParimaryActivity.class));
                 } else{  // 跳转至主界面
                     startActivity(new Intent(WelcomeActivity.this, ITParimaryActivity.class));
                 }

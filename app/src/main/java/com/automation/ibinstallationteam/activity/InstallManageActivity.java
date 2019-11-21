@@ -65,6 +65,8 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
         Intent intent;
         switch (v.getId()){
             case R.id.worker_info_layout:  // 添加工人信息
+                intent = new Intent(InstallManageActivity.this, WorkerInfoActivity.class);
+                startActivity(intent);
                 break;
             case R.id.finish_img_layout:  // 完工图片
                 intent = new Intent(InstallManageActivity.this, FinishImgActivity.class);

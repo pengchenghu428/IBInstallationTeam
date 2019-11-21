@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorMainBackground">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back" />
+    
+    <LinearLayout
+        style="@style/WorkerInfoLinearLayout">
+        <TextView
+            android:id="@+id/worker_name_tv"
+            style="@style/InputItemTextView"
+            android:text="姓名："/>
+        <EditText
+            android:id="@+id/worker_name_ev"
+            style="@style/InputItemEditView" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/WorkerInfoLinearLayout">
+
+        <TextView
+            android:id="@+id/worker_phone_number_tv"
+            style="@style/InputItemTextView"
+            android:text="联系方式："/>
+        <EditText
+            android:id="@+id/worker_phone_number_ev"
+            style="@style/InputItemEditView" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/WorkerInfoLinearLayout">
+
+        <TextView
+            android:id="@+id/worker_id_card_tv"
+            style="@style/InputItemTextView"
+            android:text="身份证号："/>
+        <EditText
+            android:id="@+id/worker_id_card_ev"
+            style="@style/InputItemEditView" />
+    </LinearLayout>
+
+    <!-- 操作证上传 -->
+    <LinearLayout
+        style="@style/WorkerInfoLinearLayout">
+        <com.automation.ibinstallationteam.widget.image.SmartImageView
+            android:id="@+id/operation_iv"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:src="@mipmap/ic_add_upload_image"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/confirm_worker_info_btn"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="20dp"
+        android:background="@color/colorPrimary"
+        android:text="确认"
+        android:textSize="@dimen/textSize_16"/>
+    <Button
+        android:id="@+id/modify_worker_info_btn"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="20dp"
+        android:background="@color/colorPrimary"
+        android:text="修改"
+        android:textSize="@dimen/textSize_16"/>
+    <Button
+        android:id="@+id/delete_worker_info_btn"
+        android:layout_width="match_parent"
+        android:layout_height ="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/red"
+        android:text="删除"
+        android:textSize="@dimen/textSize_16"/>
+
+</LinearLayout>

@@ -10,10 +10,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.automation.ibinstallationteam.R;
 import com.automation.ibinstallationteam.adapter.DeviceAddedAdapter;
 import com.automation.ibinstallationteam.entity.Device;
+import com.automation.ibinstallationteam.entity.Portion;
+import com.automation.ibinstallationteam.entity.PortionMap;
+import com.automation.ibinstallationteam.utils.ToastUtil;
+import com.automation.ibinstallationteam.widget.zxing.activity.CaptureActivity;
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +32,17 @@ import java.util.List;
 public class DeviceBoundActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String TAG = "DeviceBoundActivity";
+
+    // 页面跳转标志
+    private final static int DEVICE_CHOOSEN_ACTIVITY = 100;
+    private final static int CAPTURE_ACTIVITY_RESULT = 101;
+
+    // 页面消息传递标志
+    public final static String QRCODE_RESULT = "qr_code";
+    public final static String DEVICE_NAME = "device_name";
+
+    // 全局变量
+    private int prePosition = -1;
 
     // 控件
     private RecyclerView mAddedDeviceRv;  // 已添加设备列表
@@ -36,6 +55,7 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_bound);
 
+        if(!isHasPermission()) requestPermission();
         initWidgets();
     }
 
@@ -67,6 +87,8 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onDeleteClick(View view, int position) {
                 // 点击Item 中的删除按键
+                prePosition = position;
+                startActivityForResult(new Intent(DeviceBoundActivity.this, CaptureActivity.class), CAPTURE_ACTIVITY_RESULT);
             }
         });
 
@@ -93,8 +115,44 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
         Intent intent;
         switch(v.getId()){
             case R.id.add_device_ll:  // 添加设备
+                if(!isHasPermission()) requestPermission();
                 intent = new Intent(DeviceBoundActivity.this, DeviceChooseActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, DEVICE_CHOOSEN_ACTIVITY);
+                break;
+        }
+    }
+
+    /*
+     * 活动返回
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        switch (requestCode){
+            case DEVICE_CHOOSEN_ACTIVITY:
+                if(resultCode == RESULT_OK){
+                    String deviceName = data.getStringExtra(DEVICE_NAME);  // 名称
+                    String deviceNumber = data.getStringExtra(QRCODE_RESULT);  // 序列号
+                    /*
+                     * Do Something: 和后台通讯
+                     */
+                    int idx = PortionMap.chinesePortion.indexOf(deviceName);
+                    String imageName = "ic_" + PortionMap.englishPortion.get(idx);
+                    int imageResourceId =  getResources().getIdentifier(imageName, "mipmap", getPackageName());
+                    mDeviceList.add(new Device(deviceName, imageResourceId, deviceNumber));
+                    mDeviceAdapter.notifyDataSetChanged();
+                }
+                break;
+            case CAPTURE_ACTIVITY_RESULT:
+                if(resultCode == RESULT_OK) {
+                    String qrCode = data.getStringExtra(CaptureActivity.QR_CODE_RESULT);
+                    if(qrCode.equals(mDeviceList.get(prePosition).getNumber())){
+                        // 扫码和原先的序列号一致，则删除该设备
+                        mDeviceList.remove(prePosition);
+                        mDeviceAdapter.notifyDataSetChanged();
+                    }else{
+                        ToastUtil.showToastTips(DeviceBoundActivity.this, "设备不一致，请确认后在此扫描！");
+                    }
+                }
                 break;
         }
     }
@@ -104,5 +162,50 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
     private void initDevices(){
         mDeviceList.add(new Device("摄像头", R.mipmap.ic_camera, "DS400119873245"));
         mDeviceList.add(new Device("提升机", R.mipmap.ic_elevator, "ELE3399052710"));
+    }
+
+    /*
+     * 申请权限
+     */
+    private void requestPermission() {
+        XXPermissions.with(DeviceBoundActivity.this)
+                .constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
+                .permission(Permission.Group.STORAGE) //支持请求6.0悬浮窗权限8.0请求安装权限
+                .permission(Permission.CAMERA)
+                .permission(Permission.CALL_PHONE)
+                .request(new OnPermission() {
+                    @Override
+                    public void hasPermission(List<String> granted, boolean isAll) {
+                        if (isAll) {
+                            onResume();
+
+                        }else {
+                            Toast.makeText(DeviceBoundActivity.this,
+                                    "必须同意所有的权限才能使用本程序", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        if(quick) {
+                            Toast.makeText(DeviceBoundActivity.this, "被永久拒绝授权，请手动授予权限",
+                                    Toast.LENGTH_SHORT).show();
+                            // 如果是被永久拒绝就跳转到应用权限系统设置页面
+                            XXPermissions.gotoPermissionSettings(DeviceBoundActivity.this);
+                        }else {
+                            Toast.makeText(DeviceBoundActivity.this, "获取权限失败",
+                                    Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
+                });
+    }
+    // 是否有权限：摄像头、拨打电话
+    private boolean isHasPermission() {
+        if (XXPermissions.isHasPermission(DeviceBoundActivity.this, Permission.Group.STORAGE)
+                && XXPermissions.isHasPermission(DeviceBoundActivity.this, Permission.CAMERA)
+                && XXPermissions.isHasPermission(DeviceBoundActivity.this, Permission.CALL_PHONE))
+            return true;
+        return false;
     }
 }

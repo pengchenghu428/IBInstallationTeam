@@ -366,9 +366,6 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
 
 
     /*
-     * 权限申请
-     */
-    /*
      * 申请权限
      */
     private void requestPermission() {

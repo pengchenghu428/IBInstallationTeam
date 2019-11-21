@@ -26,7 +26,7 @@ public class PortionMap {
             "balance_weight");
     public static final List<String> chinesePortion = Arrays.asList(
             "电柜",
-            "摄像机",
+            "摄像头",
             "安全绳",
             "电缆",
             "提升机",

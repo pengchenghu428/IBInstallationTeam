@@ -361,13 +361,38 @@
     </style>
     <style name="MultiButton">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">36dp</item>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_marginLeft">20dp</item>
         <item name="android:layout_marginRight">20dp</item>
         <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/textSize_16</item>
+    </style>
+
+    <!-- 新建人员信息 -->
+    <style name="WorkerInfoLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:background">@drawable/bg_round_white</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    <style name="InputItemTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/textSize_18</item>
+    </style>
+    <style name="InputItemEditView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">@dimen/textSize_16</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
 </resources>
