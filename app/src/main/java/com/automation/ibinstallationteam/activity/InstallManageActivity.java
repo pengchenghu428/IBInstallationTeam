@@ -71,6 +71,8 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
                 startActivity(intent);
                 break;
             case R.id.device_bound_layout:  // 设备绑定
+                intent = new Intent(InstallManageActivity.this, DeviceBoundActivity.class);
+                startActivity(intent);
                 break;
             case R.id.confirm_apply_btn:  // 确认提交按钮
                 break;
