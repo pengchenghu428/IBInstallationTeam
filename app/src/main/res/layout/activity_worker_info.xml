@@ -11,13 +11,14 @@
     <!-- 内容主体部分 -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/colorMainBackground"
         android:padding="10dp">
 
         <!-- 已添加的设备列表 -->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/added_worker_rv"
+            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -26,7 +27,7 @@
         <!-- 添加设备按键 -->
         <LinearLayout
             android:id="@+id/add_worker_ll"
-            android:layout_below="@+id/added_worker_rv"
+            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

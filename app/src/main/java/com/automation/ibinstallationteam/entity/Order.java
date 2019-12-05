@@ -8,10 +8,11 @@ package com.automation.ibinstallationteam.entity;
 public class Order {
 
     // 成员变量
+    private String id; // 工单id
     private String name;  // 工单名称
     private int finishNum;  // 完成的数目
     private int totalNum;  // 吊篮总数
-    private String completedTime;  // (预计)完成时间
+    private String completedTime;  // 开始时间
 
     /*
      * 构造函数
@@ -29,6 +30,13 @@ public class Order {
     /*
      * Bean 函数
      */
+    public String getId(){
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

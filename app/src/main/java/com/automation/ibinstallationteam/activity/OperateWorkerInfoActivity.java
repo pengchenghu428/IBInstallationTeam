@@ -2,12 +2,14 @@ package com.automation.ibinstallationteam.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -21,10 +23,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.automation.ibinstallationteam.R;
 import com.automation.ibinstallationteam.application.AppConfig;
+import com.automation.ibinstallationteam.entity.UserInfo;
 import com.automation.ibinstallationteam.utils.ToastUtil;
 import com.automation.ibinstallationteam.utils.ftp.FTPUtil;
+import com.automation.ibinstallationteam.utils.okhttp.BaseCallBack;
+import com.automation.ibinstallationteam.utils.okhttp.BaseOkHttpClient;
 import com.automation.ibinstallationteam.widget.dialog.LoadingDialog;
 import com.automation.ibinstallationteam.widget.image.SmartImageView;
 import com.heynchy.compress.CompressImage;
@@ -40,6 +47,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.Call;
+
 public class OperateWorkerInfoActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String TAG = "NewWorkerInfoActivity";
@@ -47,6 +56,10 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
     // Handler 消息
     public static final int UPLODA_IMAGE_SUCCESS_MSG = 101;
     public static final int UPLODA_IMAGE_FAILURED_MSG = 102;
+
+    public static final int ADD_WORKER_SUCCESS_MSG = 103;
+    public static final int UPDATE_WORKER_SUCCESS_MSG = 104;
+    public static final int DELETE_WORKER_SUCCESS_MSG = 105;
 
     // 页面跳转标志
     public static final int TAKE_PHOTO_FROM_CAMERA= 2;  // 照相机
@@ -81,15 +94,49 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
     private String mRemotePath;
     private LoadingDialog mLoadingDialog;
 
+    // 个人信息相关
+    private UserInfo mUserInfo;
+    private String mToken;
+    private SharedPreferences mPref;
+    private SharedPreferences.Editor editor;
+
+    // 业务信息
+    private String mProjectId;
+    private String mBasketId;
+
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
+            Intent intent = new Intent();
+            String workerName = mNameEv.getText().toString();
+            String workerPhoneNumber = mPhoneNumberEv.getText().toString();
+            String workerIdCardNumber = mIdCardNumberEv.getText().toString();
             switch (msg.what) {
                 case UPLODA_IMAGE_SUCCESS_MSG:
                     mLoadingDialog.dismiss();
                     break;
                 case UPLODA_IMAGE_FAILURED_MSG:
                     mLoadingDialog.dismiss();
+                    break;
+                case ADD_WORKER_SUCCESS_MSG:
+                    intent.putExtra(WorkerInfoActivity.WORKER_NAME, workerName);
+                    intent.putExtra(WorkerInfoActivity.WORKER_PHONE_NUMBER, workerPhoneNumber);
+                    intent.putExtra(WorkerInfoActivity.WORKER_ID_CARD_NUMBER, workerIdCardNumber);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                    break;
+                case UPDATE_WORKER_SUCCESS_MSG:
+                    intent.putExtra(WorkerInfoActivity.OPERATION_IN_FACT, 1);
+                    intent.putExtra(WorkerInfoActivity.WORKER_NAME, workerName);
+                    intent.putExtra(WorkerInfoActivity.WORKER_PHONE_NUMBER, workerPhoneNumber);
+                    intent.putExtra(WorkerInfoActivity.WORKER_ID_CARD_NUMBER, workerIdCardNumber);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                    break;
+                case DELETE_WORKER_SUCCESS_MSG:
+                    intent.putExtra(WorkerInfoActivity.OPERATION_IN_FACT, 0 );
+                    setResult(RESULT_OK, intent);
+                    finish();
                     break;
             }
         }
@@ -102,6 +149,7 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
 
         if(!isHasPermission()) requestPermission();
 
+        getUserInfo();
         initIntent();
         initWidgets();
         initFTPClient(); // 初始化文件服务器
@@ -187,13 +235,9 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
                 }
                 mLoadingDialog.show();
                 startSendImage();
-                intent.putExtra(WorkerInfoActivity.WORKER_NAME, workerName);
-                intent.putExtra(WorkerInfoActivity.WORKER_PHONE_NUMBER, workerPhoneNumber);
-                intent.putExtra(WorkerInfoActivity.WORKER_ID_CARD_NUMBER, workerIdCardNumber);
-                setResult(RESULT_OK, intent);
-                finish();
+                addNewWorkerInfo();
                 break;
-            case R.id.modify_worker_info_btn:
+            case R.id.modify_worker_info_btn:  // 修改按钮
                 mRemotePath = "tempUser/" + workerPhoneNumber + "/";  // 图片上传地址
                 remoteFileName = "operation.jpg";
                 if(photoFile != null){
@@ -201,21 +245,127 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
                     mLoadingDialog.show();
                     startSendImage();
                 }
-                intent.putExtra(WorkerInfoActivity.OPERATION_IN_FACT, 1);
-                intent.putExtra(WorkerInfoActivity.WORKER_NAME, workerName);
-                intent.putExtra(WorkerInfoActivity.WORKER_PHONE_NUMBER, workerPhoneNumber);
-                intent.putExtra(WorkerInfoActivity.WORKER_ID_CARD_NUMBER, workerIdCardNumber);
-                setResult(RESULT_OK, intent);
-                finish();
+                updateWorkerInfo();
                 break;
-            case R.id.delete_worker_info_btn:
-                intent.putExtra(WorkerInfoActivity.OPERATION_IN_FACT, 0 );
-                setResult(RESULT_OK, intent);
-                finish();
+            case R.id.delete_worker_info_btn:  // 删除按钮
+                deleteWorkerInfo();
                 break;
         }
     }
 
+    /*
+     * 后台通信处理
+     */
+    // 新增工人信息
+    private void addNewWorkerInfo(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", mToken)
+                .addParam("userId", mUserInfo.getUserId())
+                .addParam("projectId", mProjectId)
+                .addParam("deviceId", mBasketId)
+                .addParam("name", mNameEv.getText().toString())
+                .addParam("phone", mPhoneNumberEv.getText().toString())
+                .addParam("accountId", mIdCardNumberEv.getText().toString())
+                .post()
+                .url(AppConfig.CREATE_INSTALLER)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String data = o.toString();
+                        JSONObject jsonObject = JSON.parseObject(data);
+                        boolean isLogin = jsonObject.getBooleanValue("isLogin");
+                        if(isLogin)
+                            mHandler.sendEmptyMessage(ADD_WORKER_SUCCESS_MSG);
+                        else
+                            ToastUtil.showToastTips(OperateWorkerInfoActivity.this, "添加失败");
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "Error:" + code);
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "Failure:" + e.toString());
+                    }
+                });
+    }
+    // 修改工人信息
+    private void updateWorkerInfo(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", mToken)
+                .addParam("userId", mUserInfo.getUserId())
+                .addParam("projectId", mProjectId)
+                .addParam("deviceId", mBasketId)
+                .addParam("name", mNameEv.getText().toString())
+                .addParam("phone", mPhoneNumberEv.getText().toString())
+                .addParam("accountId", mIdCardNumberEv.getText().toString())
+                .post()
+                .url(AppConfig.UPDATE_INSTALLER)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String data = o.toString();
+                        JSONObject jsonObject = JSON.parseObject(data);
+                        boolean isLogin = jsonObject.getBooleanValue("isLogin");
+                        if(isLogin)
+                            mHandler.sendEmptyMessage(UPDATE_WORKER_SUCCESS_MSG);
+                        else
+                            ToastUtil.showToastTips(OperateWorkerInfoActivity.this, "更新失败");
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "Error:" + code);
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "Failure:" + e.toString());
+                    }
+                });
+    }
+    // 删除工人信息
+    private void deleteWorkerInfo(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", mToken)
+                .addParam("userId", mUserInfo.getUserId())
+                .addParam("projectId", mProjectId)
+                .addParam("deviceId", mBasketId)
+                .addParam("phone", mPhoneNumberEv.getText().toString())
+                .post()
+                .url(AppConfig.DELETE_INSTALLER)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String data = o.toString();
+                        JSONObject jsonObject = JSON.parseObject(data);
+                        boolean isLogin = jsonObject.getBooleanValue("isLogin");
+                        if(isLogin)
+                            mHandler.sendEmptyMessage(DELETE_WORKER_SUCCESS_MSG);
+                        else
+                            ToastUtil.showToastTips(OperateWorkerInfoActivity.this, "删除失败");
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "Error:" + code);
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "Failure:" + e.toString());
+                    }
+                });
+    }
+
+    /*
+     * 页面消息返回处理
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -252,6 +402,8 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
     // 页面传递数据
     private void initIntent(){
         Intent intent = getIntent();
+        mProjectId = intent.getStringExtra(WorkerInfoActivity.PROJECT_ID);
+        mBasketId = intent.getStringExtra(WorkerInfoActivity.BASKET_ID);
         int operation_type = intent.getIntExtra(WorkerInfoActivity.OPERATION_TYPE, -1);
         if (operation_type==0) {
             operationType = "添加新员工信息";
@@ -349,6 +501,20 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
         mLoadingDialog.setCancelable(false);
     }
 
+
+    /*
+     * 本地信息交互
+     */
+    // 获取用户数据
+    private void getUserInfo(){
+        // 从本地获取数据
+        mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserInfo = new UserInfo();
+        mUserInfo.setUserId(mPref.getString("userId", ""));
+        mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
+        mUserInfo.setUserRole(mPref.getString("userRole", ""));
+        mToken = mPref.getString("loginToken","");
+    }
 
     /*
      * 权限申请

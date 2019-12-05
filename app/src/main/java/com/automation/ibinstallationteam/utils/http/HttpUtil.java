@@ -29,7 +29,7 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
-    //登录请求
+    // 登录请求
     public static void sendLoginOkHttpRequest(okhttp3.Callback callback, String account, String password) {
         OkHttpClient client = new OkHttpClient();
         JSONObject jsonObject = new JSONObject();
@@ -44,5 +44,7 @@ public class HttpUtil {
                 .build();
         client.newCall(request).enqueue(callback);
     }
+
+    //
 
 }

@@ -174,6 +174,10 @@ public class ITParimaryActivity extends AppCompatActivity implements View.OnClic
     }
 
     /*
+     * 后台通信
+     */
+
+    /*
      * 解析用户信息
      */
     // 获取用户数据

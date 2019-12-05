@@ -43,6 +43,10 @@ public class Basket {
     public void setWorkerInfo(boolean workerInfo) {
         this.workerInfo = workerInfo;
     }
+    public void setWorkerInfo(int workerInfo) {
+        if(workerInfo==0) this.workerInfo=false;
+        else this.workerInfo=true;
+    }
 
     public boolean isFinishImg() {
         return finishImg;
@@ -51,6 +55,10 @@ public class Basket {
     public void setFinishImg(boolean finishImg) {
         this.finishImg = finishImg;
     }
+    public void setFinishImg(int finishImg) {
+        if(finishImg==0) this.finishImg=false;
+        else this.finishImg=true;
+    }
 
     public boolean isDeviceBound() {
         return deviceBound;
@@ -58,5 +66,9 @@ public class Basket {
 
     public void setDeviceBound(boolean deviceBound) {
         this.deviceBound = deviceBound;
+    }
+    public void setDeviceBound(int deviceBound) {
+        if(deviceBound==0) this.deviceBound=false;
+        else this.deviceBound=true;
     }
 }

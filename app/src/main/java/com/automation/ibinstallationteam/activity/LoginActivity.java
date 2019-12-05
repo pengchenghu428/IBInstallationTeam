@@ -41,7 +41,7 @@ import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private final static String TAG = "LoginActivity";
-    private final static int LOGONIN_SUCCESS = 100;
+    private final static int  LOGONIN_SUCCESS = 100;
     private final static int LOGONIN_REGISTER_NOT_ALLOW = 101;
     private final static int LOGONIN_USER_NOT_EXIST = 102;
     private final static int LOGONIN_PASSWORD_ERROR = 103;

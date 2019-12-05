@@ -4,8 +4,8 @@ public class AppConfig {
     /*
      * 服务器地址
      */
-    public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
-//    public final static String ANDROID_URL_PATH = "http://10.193.233.106:8080"; // 老刘
+//    public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
+    public final static String ANDROID_URL_PATH = "http://10.193.246.98:8080"; // 老刘
     public final static String FILE_SERVER_YBLIU_IP = "47.100.1.211";  // 刘跃博FTP文件服务器
     public final static int FILE_SERVER_YBLIU_PORT = 21;  // 刘跃博FTP文件服务器的端口
     public final static String FILE_SERVER_YBLIU_PATH = "http://47.100.1.211:8082/smartNacelle/"; // 刘跃博HTTP文件服务器地址
@@ -36,4 +36,11 @@ public class AppConfig {
     // 获取项目详情
     public static final String GET_PROJECT_INFO = ANDROID_URL_PATH.concat("/projectDetailInfo");
     public static final String GET_BASKET_LIST_INFO = ANDROID_URL_PATH.concat("/getBasketList");
+
+    // 安装队伍获取项目信息
+    public static final String GET_PROJECT_BY_INSTALLER = ANDROID_URL_PATH.concat("/getProjectByInstaller");
+    public static final String GET_INSTALLER = ANDROID_URL_PATH.concat("/getInstaller");
+    public static final String CREATE_INSTALLER = ANDROID_URL_PATH.concat("/createInstaller");
+    public static final String UPDATE_INSTALLER = ANDROID_URL_PATH.concat("/updateInstaller");
+    public static final String DELETE_INSTALLER = ANDROID_URL_PATH.concat("/deleteInstaller");
 }

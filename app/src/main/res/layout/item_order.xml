@@ -68,7 +68,7 @@
             style="@style/ItemLinearLayout">
             <TextView style="@style/ItemHintTextView"
                 android:id="@+id/order_date_hint_tv"
-                android:text="预计完成日期："/>
+                android:text="开始日期："/>
             <TextView style="@style/ItemContentTextView"
                 android:id="@+id/order_date_content_tv"
                 android:text="2019/10/18"/>

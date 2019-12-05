@@ -79,6 +79,7 @@ public class FinishImgActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finish_img);
 
+        getIntentData();
         initWidgets();
         initFTPClient();
     }
@@ -182,6 +183,14 @@ public class FinishImgActivity extends AppCompatActivity {
     private void initFTPClient(){
         mFTPClient = new FTPUtil(AppConfig.FILE_SERVER_YBLIU_IP, AppConfig.FILE_SERVER_YBLIU_PORT,
                 AppConfig.FILE_SERVER_USERNAME, AppConfig.FILE_SERVER_PASSWORD);
+    }
+    /*
+     * 获取页面传递消息
+     */
+    private void getIntentData(){
+        Intent intent = getIntent();
+        projectId = intent.getStringExtra(InstallManageActivity.PROJECT_ID);
+        basketId = intent.getStringExtra(InstallManageActivity.BASKET_ID);
     }
 
     /*

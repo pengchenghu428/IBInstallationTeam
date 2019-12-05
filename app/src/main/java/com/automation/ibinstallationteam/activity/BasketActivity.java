@@ -2,8 +2,10 @@ package com.automation.ibinstallationteam.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,17 +21,28 @@ import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.automation.ibinstallationteam.R;
 import com.automation.ibinstallationteam.adapter.BasketAdapter;
 import com.automation.ibinstallationteam.adapter.MgStateAdapter;
+import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.Basket;
+import com.automation.ibinstallationteam.entity.Order;
+import com.automation.ibinstallationteam.entity.UserInfo;
+import com.automation.ibinstallationteam.utils.okhttp.BaseCallBack;
+import com.automation.ibinstallationteam.utils.okhttp.BaseOkHttpClient;
 import com.scwang.smartrefresh.header.BezierCircleHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import okhttp3.Call;
 
 public class BasketActivity extends AppCompatActivity implements View.OnTouchListener{
 
@@ -37,6 +50,10 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
 
     // Handler 消息
     private final static int SWITCH_BASKET_STATE_MSG = 101;
+
+    // 页面消息传递
+    public final static String PROJECT_ID = "projecy_id";
+    public final static String BASKET_ID = "basket_id";
 
     // 吊篮状态选择
     private GridView mBasketStateGv;  // 吊篮状态
@@ -53,7 +70,7 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
     private List<Basket> mBasketSelectedList = new ArrayList<>();
     private BasketAdapter mBasketAdapter;
 
-    // 无工单
+    // 无d吊篮
     private RelativeLayout mBlankRelativeLayout;
     private TextView mBlankHintTextView;
 
@@ -61,6 +78,15 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
     private static final int FLING_MIN_DISTANCE = 50;   //最小距离
     private static final int FLING_MIN_VELOCITY = 0;   //最小速度
     private GestureDetector mGestureDetector;
+
+    // 业务数据
+    private String mProjectId;
+
+    // 个人信息相关
+    private UserInfo mUserInfo;
+    private String mToken;
+    private SharedPreferences mPref;
+    private SharedPreferences.Editor editor;
 
     /*
      * 消息函数
@@ -81,6 +107,7 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
                         mBlankRelativeLayout.setVisibility(View.GONE);
                         mListRelativeLayout.setVisibility(View.VISIBLE);
                     }
+                    mSmartRefreshLayout.finishRefresh();
                     break;
                 default:
                     break;
@@ -93,6 +120,9 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basket);
 
+        getUserInfo();
+        getIntentInfo();
+        getBasketInfoFromInternet();
         initWidgets();
     }
 
@@ -135,7 +165,7 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
         mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() { // 添加下拉刷新监听
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                mSmartRefreshLayout.finishRefresh();
+                getBasketInfoFromInternet();
             }
         });
 
@@ -154,17 +184,20 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
             public void onItemClick(View view, int position) {
                 // 点击item响应
                 Log.i(TAG, "You have clicked the "+position+" item");
-                startActivity(new Intent(BasketActivity.this, InstallManageActivity.class));
+                Intent intent = new Intent(BasketActivity.this, InstallManageActivity.class);
+                intent.putExtra(PROJECT_ID, mProjectId);
+                intent.putExtra(BASKET_ID, mBasketSelectedList.get(position).getId());
+                startActivity(intent);
             }
         });
-        initBasketList();
+//        initBasketList();
 
         // 设置手势监听
         mGestureDetector = new GestureDetector(this, myGestureListener);
         mSmartRefreshLayout.setOnTouchListener(this); // 将主容器的监听交给本activity，本activity再交给mGestureDetector
         mSmartRefreshLayout.setLongClickable(true); // 必需设置这为true 否则也监听不到手势
 
-        mHandler.sendEmptyMessage(SWITCH_BASKET_STATE_MSG);
+//        mHandler.sendEmptyMessage(SWITCH_BASKET_STATE_MSG);
     }
 
     @Override
@@ -175,6 +208,83 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /*
+     * 后台通信
+     */
+    private void getBasketInfoFromInternet(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", mToken)
+                .addParam("userId", mUserInfo.getUserId())
+                .addParam("projectId", mProjectId)
+                .addParam("type", 2)
+                .get()
+                .url(AppConfig.GET_PROJECT_BY_INSTALLER)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String data = o.toString();
+                        JSONObject jsonObject = JSON.parseObject(data);
+                        boolean isLogin = jsonObject.getBooleanValue("isLogin");
+                        if(isLogin)
+                            parseProjectDetails(jsonObject.getString("info"));
+
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "Error:" + code);
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "Failure:" + e.toString());
+                    }
+                });
+    }
+    private void parseProjectDetails(String data){
+        mBasketSummaryList.clear();
+        initBasketList();
+
+        JSONObject jsonObject = JSON.parseObject(data);
+        Iterator<String> basketIds = jsonObject.keySet().iterator();
+        while(basketIds.hasNext()) {
+            String basketId = basketIds.next();
+
+            JSONObject basketObject = JSON.parseObject(jsonObject.getString(basketId));
+            JSONObject basketInfo = JSON.parseObject(basketObject.getString(basketId));
+            Basket basket = new Basket();
+            basket.setId(basketId);
+            basket.setWorkerInfo(basketObject.getIntValue(basketId+"_userState"));
+            basket.setDeviceBound(basketObject.getIntValue(basketId+"deviceState"));
+            basket.setFinishImg(basketInfo.getIntValue("pic_flg"));
+
+            int flag = basketInfo.getIntValue("flag");
+            if(flag==0) mBasketSummaryList.get(1).add(basket);
+            else if(flag==1) mBasketSummaryList.get(0).add(basket);
+        }
+        mHandler.sendEmptyMessage(SWITCH_BASKET_STATE_MSG);
+    }
+
+    /*
+     * 本地信息交互
+     */
+    // 获取用户数据
+    private void getUserInfo(){
+        // 从本地获取数据
+        mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserInfo = new UserInfo();
+        mUserInfo.setUserId(mPref.getString("userId", ""));
+        mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
+        mUserInfo.setUserRole(mPref.getString("userRole", ""));
+        mToken = mPref.getString("loginToken","");
+    }
+    // 获取页面传递消息
+    private void getIntentInfo(){
+        Intent intent = getIntent();
+        mProjectId = intent.getStringExtra(OrderActivity.PROJECT_ID);
     }
 
     /* 手势监听
@@ -215,25 +325,28 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
         mStateLists.add("已完成");
     }
     private void initBasketList(){
-        // 进行中
-        List<Basket> tmpBaskets  = new ArrayList<>();
-        Basket basket1 = new Basket("201906220001", false, false, false);
-        tmpBaskets.add(basket1);
-        Basket basket2 = new Basket("201906220002", true, false, false);
-        tmpBaskets.add(basket2);
-        Basket basket3 = new Basket("201906220003", true, true, false);
-        tmpBaskets.add(basket3);
-        mBasketSummaryList.add(tmpBaskets);  // 进行中
-
-        // 已完成
-        List<Basket> tmp2Baskets  = new ArrayList<>();
-        Basket basket4 = new Basket("201901015001", true, true, true);
-        tmp2Baskets.add(basket4);
-        Basket basket5 = new Basket("201901015001", true, true, true);
-        tmp2Baskets.add(basket5);
-        Basket basket6 = new Basket("201901015001", true, true, true);
-        tmp2Baskets.add(basket6);
-        mBasketSummaryList.add(tmp2Baskets);  // 进行中
+        for (int i=0; i<2; i++){
+            mBasketSummaryList.add(new ArrayList<Basket>());
+        }
+//        // 进行中
+//        List<Basket> tmpBaskets  = new ArrayList<>();
+//        Basket basket1 = new Basket("201906220001", false, false, false);
+//        tmpBaskets.add(basket1);
+//        Basket basket2 = new Basket("201906220002", true, false, false);
+//        tmpBaskets.add(basket2);
+//        Basket basket3 = new Basket("201906220003", true, true, false);
+//        tmpBaskets.add(basket3);
+//        mBasketSummaryList.add(tmpBaskets);  // 进行中
+//
+//        // 已完成
+//        List<Basket> tmp2Baskets  = new ArrayList<>();
+//        Basket basket4 = new Basket("201901015001", true, true, true);
+//        tmp2Baskets.add(basket4);
+//        Basket basket5 = new Basket("201901015001", true, true, true);
+//        tmp2Baskets.add(basket5);
+//        Basket basket6 = new Basket("201901015001", true, true, true);
+//        tmp2Baskets.add(basket6);
+//        mBasketSummaryList.add(tmp2Baskets);  // 进行中
     }
 
 }
