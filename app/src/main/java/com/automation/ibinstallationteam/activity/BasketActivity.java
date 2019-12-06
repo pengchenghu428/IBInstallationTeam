@@ -257,13 +257,13 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
             JSONObject basketInfo = JSON.parseObject(basketObject.getString(basketId));
             Basket basket = new Basket();
             basket.setId(basketId);
-            basket.setWorkerInfo(basketObject.getIntValue(basketId+"_userState"));
-            basket.setDeviceBound(basketObject.getIntValue(basketId+"deviceState"));
-            basket.setFinishImg(basketInfo.getIntValue("pic_flg"));
+            basket.setWorkerInfo(basketObject.getIntValue(basketId+"_userState"));  // 用户信息 0 未完成 1 完成
+            basket.setDeviceBound(basketObject.getIntValue(basketId+"_deviceState"));  // 设备绑定 0 未完成 1 完成
+            basket.setFinishImg(basketInfo.getIntValue("pic_flg"));  // 图片上传完整 1 完成 0 未完成
 
-            int flag = basketInfo.getIntValue("flag");
-            if(flag==0) mBasketSummaryList.get(1).add(basket);
-            else if(flag==1) mBasketSummaryList.get(0).add(basket);
+            int flag = basketInfo.getIntValue("flag");  // flag: 0 进行中 1 未完成
+            if(flag==0) mBasketSummaryList.get(0).add(basket);
+            else if(flag==1) mBasketSummaryList.get(1).add(basket);
         }
         mHandler.sendEmptyMessage(SWITCH_BASKET_STATE_MSG);
     }
@@ -285,6 +285,14 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
     private void getIntentInfo(){
         Intent intent = getIntent();
         mProjectId = intent.getStringExtra(OrderActivity.PROJECT_ID);
+    }
+
+    /*
+     * 生命周期函数
+     */
+    protected void onResume(){
+        getBasketInfoFromInternet();
+        super.onResume();
     }
 
     /* 手势监听

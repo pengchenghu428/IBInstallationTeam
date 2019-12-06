@@ -2,22 +2,32 @@ package com.automation.ibinstallationteam.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.automation.ibinstallationteam.R;
 import com.automation.ibinstallationteam.adapter.PortionAdapter;
 import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.Portion;
 import com.automation.ibinstallationteam.entity.PortionMap;
+import com.automation.ibinstallationteam.entity.UserInfo;
+import com.automation.ibinstallationteam.utils.ToastUtil;
 import com.automation.ibinstallationteam.utils.ftp.FTPUtil;
+import com.automation.ibinstallationteam.utils.okhttp.BaseCallBack;
+import com.automation.ibinstallationteam.utils.okhttp.BaseOkHttpClient;
 import com.automation.ibinstallationteam.widget.SmartGridView;
 import com.scwang.smartrefresh.header.BezierCircleHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -30,15 +40,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
+
 /* 完工图片上传
  */
 
-public class FinishImgActivity extends AppCompatActivity {
+public class FinishImgActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "FinishImgActivity";
 
     // 消息处理变量
     private static final int UPDATE_IMAGE_STATE_MSG = 101;
+    private static final int VERIFY_FINISH_IMG_MSG = 102;
 
     // 页面跳转全局变量
     public static final String PROJECT_ID = "project_id";  // 项目ID
@@ -46,12 +59,19 @@ public class FinishImgActivity extends AppCompatActivity {
     public static final String IMAGE_TYPE_ID = "image_type_id";  // 上传图片类型
 
     // 全局变量
-    private String projectId = "201910110001";
-    private String basketId = "201910110001";
+    private String projectId;
+    private String basketId;
+
+    // 个人信息相关
+    private UserInfo mUserInfo;
+    private String mToken;
+    private SharedPreferences mPref;
+    private SharedPreferences.Editor editor;
 
     // 控件声明
     private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
     private SmartGridView mPortionGv;  // 部件网格控件
+    private Button mVerifyBtn;  // 确认完工图片
 
     // var switch gridview
     private List<Portion> mPortions;  // 部件变量列表
@@ -69,6 +89,9 @@ public class FinishImgActivity extends AppCompatActivity {
                 case UPDATE_IMAGE_STATE_MSG:
                     mPortionAdapter.notifyDataSetChanged();
                     break;
+                case VERIFY_FINISH_IMG_MSG:
+                    finish();
+                    break;
                 default: break;
             }
         }
@@ -79,6 +102,7 @@ public class FinishImgActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finish_img);
 
+        getUserInfo();
         getIntentData();
         initWidgets();
         initFTPClient();
@@ -133,8 +157,15 @@ public class FinishImgActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // 确认完工图片
+        mVerifyBtn = (Button) findViewById(R.id.verify_finish_img_btn);
+        mVerifyBtn.setOnClickListener(this);
     }
 
+    /*
+    消息响应
+     */
     // 顶部导航栏消息响应
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -145,10 +176,73 @@ public class FinishImgActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    // 普通按钮响应
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.verify_finish_img_btn:
+                // 检查图片
+                boolean flag = isAllImageExist();
+                if(flag) updateFinishImgState();
+                else ToastUtil.showToastTips(FinishImgActivity.this, "图片尚未全部上传，请完善图片");
+                break;
+            default:
+                break;
+        }
+    }
 
     /*
      * 后台通信
      */
+    /* 后台数据库 */
+    private void updateFinishImgState(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", mToken)
+                .addParam("userId", mUserInfo.getUserId())
+                .addParam("projectId", projectId)
+                .addParam("deviceId", basketId)
+                .addParam("state", 1)
+                .addParam("type", 2)
+                .post()
+                .url(AppConfig.UPDATE_INSTALLER_STATE)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String data = o.toString();
+                        JSONObject jsonObject = JSON.parseObject(data);
+                        boolean isLogin = jsonObject.getBooleanValue("isLogin");
+                        if(isLogin){
+                            if(jsonObject.getString("update").equals("success")){
+                                ToastUtil.showToastTips(FinishImgActivity.this, "完工图片状态更新成功");
+                                mHandler.sendEmptyMessage(VERIFY_FINISH_IMG_MSG);
+                            }else{
+                                ToastUtil.showToastTips(FinishImgActivity.this, "完工图片状态更新失败");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "Error:" + code);
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "Failure:" + e.toString());
+                    }
+                });
+    }
+
+    /*FTP*/
+    // 检查是否所有的图片都存在
+    private boolean isAllImageExist(){
+        for (int i=0; i<mPortions.size(); i++){
+            if(mPortions.get(i).getState()==0)
+                return false;
+        }
+        return true;
+    }
     // 检查文件是否存在
     private void checkImageExist(){
         mRemotePath = "project/" + projectId + "/" + basketId;  // 图片上传地址
@@ -185,8 +279,19 @@ public class FinishImgActivity extends AppCompatActivity {
                 AppConfig.FILE_SERVER_USERNAME, AppConfig.FILE_SERVER_PASSWORD);
     }
     /*
-     * 获取页面传递消息
+     * 消息获取
      */
+    // 获取个人信息
+    private void getUserInfo(){
+        // 从本地获取数据
+        mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserInfo = new UserInfo();
+        mUserInfo.setUserId(mPref.getString("userId", ""));
+        mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
+        mUserInfo.setUserRole(mPref.getString("userRole", ""));
+        mToken = mPref.getString("loginToken","");
+    }
+    // 获取页面传递消息
     private void getIntentData(){
         Intent intent = getIntent();
         projectId = intent.getStringExtra(InstallManageActivity.PROJECT_ID);
@@ -235,4 +340,5 @@ public class FinishImgActivity extends AppCompatActivity {
         Portion balanceWeight = new Portion("配重", R.mipmap.ic_balance_weight, 0);
         mPortions.add(balanceWeight);
     }
+
 }

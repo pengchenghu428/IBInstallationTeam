@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             switch (msg.what) {
                 case LOGONIN_SUCCESS:  // 登陆成功
                     startActivity(new Intent(LoginActivity.this, ITParimaryActivity.class));
+                    finish();  // 销毁本活动
                     break;
                 case LOGONIN_REGISTER_NOT_ALLOW: // 注册未审核
                     mCommonDialog = initDialog(getString(R.string.dialog_login_audit));

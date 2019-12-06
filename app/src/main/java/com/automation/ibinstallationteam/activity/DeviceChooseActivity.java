@@ -123,10 +123,10 @@ public class DeviceChooseActivity extends AppCompatActivity {
     * */
     private void initDeviceList(){
         deviceList = new ArrayList<>();
-        deviceList.add(new Device("电柜", R.mipmap.ic_electrical_box));
+//        deviceList.add(new Device("电柜", R.mipmap.ic_electrical_box));
         deviceList.add(new Device("摄像头", R.mipmap.ic_camera));
-        deviceList.add(new Device("安全绳", R.mipmap.ic_safe_rope));
-        deviceList.add(new Device("电缆", R.mipmap.ic_cable));
+        deviceList.add(new Device("安全锁", R.mipmap.ic_safe_lock));
+//        deviceList.add(new Device("电缆", R.mipmap.ic_cable));
         deviceList.add(new Device("提升机", R.mipmap.ic_elevator));
     }
 }

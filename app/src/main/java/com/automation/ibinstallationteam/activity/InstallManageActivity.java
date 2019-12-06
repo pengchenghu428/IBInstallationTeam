@@ -1,20 +1,34 @@
 package com.automation.ibinstallationteam.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.automation.ibinstallationteam.R;
+import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.UserInfo;
+import com.automation.ibinstallationteam.utils.ToastUtil;
+import com.automation.ibinstallationteam.utils.okhttp.BaseCallBack;
+import com.automation.ibinstallationteam.utils.okhttp.BaseOkHttpClient;
+
+import java.io.IOException;
+
+import okhttp3.Call;
 
 /*
  * 安装管理页面
@@ -23,6 +37,9 @@ import com.automation.ibinstallationteam.entity.UserInfo;
 public class InstallManageActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String TAG = "InstallManageActivity";
+
+    // Handler 消息
+    private final static int UPDATE_STATE_SUCCESS_MSG = 100;
 
     // 控件
     private LinearLayout mWorkerInfoLayout;  // 信息采集
@@ -39,11 +56,34 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
     private String mProjectId;  // 项目号
     private String mBasketId;  // 吊篮号
 
+    // 个人信息相关
+    private UserInfo mUserInfo;
+    private String mToken;
+    private SharedPreferences mPref;
+    private SharedPreferences.Editor editor;
+
+    /*
+     * 消息函数
+     */
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch(msg.what) {
+                case UPDATE_STATE_SUCCESS_MSG:  // 更新WorkInfoList状态
+                    finish();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_install_manage);
 
+        getUserInfo();
         getIntentInfo();
         initWidgets();
     }
@@ -95,6 +135,7 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
                 startActivity(intent);
                 break;
             case R.id.confirm_apply_btn:  // 确认提交按钮
+                updateFinishImgState();
                 break;
         }
     }
@@ -109,9 +150,61 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
         return super.onOptionsItemSelected(item);
     }
 
+    /* 后台通信
+    * */
+    /* 后台数据库 */
+    private void updateFinishImgState(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", mToken)
+                .addParam("userId", mUserInfo.getUserId())
+                .addParam("projectId", mProjectId)
+                .addParam("deviceId", mBasketId)
+                .addParam("state", 1)  // 0 未完工 1 完工
+                .addParam("type", 1)  // type 1 吊篮状态
+                .post()
+                .url(AppConfig.UPDATE_INSTALLER_STATE)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String data = o.toString();
+                        JSONObject jsonObject = JSON.parseObject(data);
+                        boolean isLogin = jsonObject.getBooleanValue("isLogin");
+                        if(isLogin){
+                            if(jsonObject.getString("update").equals("success")){
+                                ToastUtil.showToastTips(InstallManageActivity.this, "吊篮完工申请中...");
+                                mHandler.sendEmptyMessage(UPDATE_STATE_SUCCESS_MSG);
+                            }else{
+                                ToastUtil.showToastTips(InstallManageActivity.this, "无法完工，信息上传不完整");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "Error:" + code);
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "Failure:" + e.toString());
+                    }
+                });
+    }
+
     /*
      * 本地信息交互
      */
+    // 获取个人信息
+    private void getUserInfo(){
+        // 从本地获取数据
+        mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserInfo = new UserInfo();
+        mUserInfo.setUserId(mPref.getString("userId", ""));
+        mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
+        mUserInfo.setUserRole(mPref.getString("userRole", ""));
+        mToken = mPref.getString("loginToken","");
+    }
     // 获取页面传递消息
     private void getIntentInfo(){
         Intent intent = getIntent();

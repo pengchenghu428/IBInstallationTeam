@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.automation.ibinstallationteam.R;
+import com.automation.ibinstallationteam.entity.Basket;
 import com.automation.ibinstallationteam.widget.searchview.ICallBack;
 import com.automation.ibinstallationteam.widget.searchview.SearchView;
 import com.automation.ibinstallationteam.widget.searchview.bCallBack;
@@ -42,7 +43,7 @@ public class SearchProjectActivity extends AppCompatActivity {
                 /*
                  * 这边需要添加对字符串的一些检查
                  */
-                Intent intent = new Intent(SearchProjectActivity.this, ProjectDetailsActivity.class);
+                Intent intent = new Intent(SearchProjectActivity.this, BasketActivity.class);
                 intent.putExtra(PROJECT_ID, projectId);
                 startActivity(intent);
             }

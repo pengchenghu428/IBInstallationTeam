@@ -43,4 +43,10 @@ public class AppConfig {
     public static final String CREATE_INSTALLER = ANDROID_URL_PATH.concat("/createInstaller");
     public static final String UPDATE_INSTALLER = ANDROID_URL_PATH.concat("/updateInstaller");
     public static final String DELETE_INSTALLER = ANDROID_URL_PATH.concat("/deleteInstaller");
+    // 绑定设备
+    public static final String GET_ELECTRIC_BOX_CONFIG = ANDROID_URL_PATH.concat("/getElectricBoxConfig");
+    public static final String CREATE_ELECTRIC_BOX_CONFIG = ANDROID_URL_PATH.concat("/createElectricBoxConfig");
+    public static final String DELETE_ELECTRIC_BOX_CONFIG = ANDROID_URL_PATH.concat("/deleteElectricBoxConfig");
+    // 设备状态更新
+    public static final String UPDATE_INSTALLER_STATE = ANDROID_URL_PATH.concat("/updateInstallState");
 }
