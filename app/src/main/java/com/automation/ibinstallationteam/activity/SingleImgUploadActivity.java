@@ -63,6 +63,7 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
             File.separator + Environment.DIRECTORY_DCIM + File.separator+"Camera"+ File.separator;
 
     // 控件
+    private TextView mCheckExampleTv;
     private SmartImageView mUploadImageIv;
     private Button mUploadBtn;
 
@@ -120,6 +121,13 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
+        mCheckExampleTv = (TextView) findViewById(R.id.check_example_img_tv);
+        mCheckExampleTv.setOnClickListener(this);
+        if(imageType<2)
+            mCheckExampleTv.setVisibility(View.VISIBLE);  // 显示示例图片选项（电柜和提升机）
+        else
+            mCheckExampleTv.setVisibility(View.GONE);  // 不显示示例图片选项
+
         mUploadImageIv = (SmartImageView) findViewById(R.id.image_display_iv);
         mUploadImageIv.setImageUrl(remoteFileUrl, R.mipmap.ic_add_upload_image);
         mUploadImageIv.setOnClickListener(this);
@@ -143,6 +151,11 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.check_example_img_tv:  // 跳转到查看示例图片页面
+                Intent intent = new Intent(SingleImgUploadActivity.this, CheckExampleImgActivity.class);
+                intent.putExtra("image_type_name", PortionMap.englishPortion.get(imageType));
+                startActivity(intent);
+                break;
             case R.id.image_display_iv:  // 点击图片，查看大图，尚未完成
                 break;
             case R.id.upload_btn:

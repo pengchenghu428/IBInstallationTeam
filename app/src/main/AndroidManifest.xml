@@ -28,7 +28,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.OperateWorkerInfoActivity"></activity>
+        <activity android:name=".activity.CheckExampleImgActivity"></activity>
+        <activity android:name=".activity.OperateWorkerInfoActivity" />
         <activity android:name=".activity.WorkerInfoActivity" />
         <activity android:name=".activity.DeviceChooseActivity" />
         <activity android:name=".activity.DeviceBoundActivity" />

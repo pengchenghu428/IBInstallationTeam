@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMainBackground">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back"/>
+
+    <!-- 示例显示画布 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:padding="10dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_round_white">
+
+        <!-- 二维图案 -->
+        <com.automation.ibinstallationteam.widget.image.SmartImageView
+            android:id="@+id/example_img_imageview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"/>
+
+        <!--&lt;!&ndash; 提示信息 &ndash;&gt;-->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/user_qrcode_imageview"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:text="扫描二维码图案，添加我到项目"/>-->
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

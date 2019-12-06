@@ -15,6 +15,17 @@
         android:background="@color/colorMainBackground"
         android:orientation="vertical">
 
+        <!-- 查看示例 -->
+        <TextView
+        android:id="@+id/check_example_img_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:text="查看示例"
+        android:textSize="@dimen/textSize_16"/>
+
         <!-- 图片显示画布 -->
         <LinearLayout
             style="@style/MultiLinearLayout">
