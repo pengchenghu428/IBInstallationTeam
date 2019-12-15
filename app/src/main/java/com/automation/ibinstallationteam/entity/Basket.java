@@ -9,6 +9,7 @@ public class Basket {
 
     /* 成员变量
      */
+    private String projectId;  // 项目编号
     private String id;  // 电柜编号
     private boolean workerInfo;  // 工人信息
     private boolean finishImg;  // 完工图片
@@ -70,5 +71,12 @@ public class Basket {
     public void setDeviceBound(int deviceBound) {
         if(deviceBound==0) this.deviceBound=false;
         else this.deviceBound=true;
+    }
+
+    public String getProjectId(){
+        return projectId;
+    }
+    public void setProjectId(String projectId){
+        this.projectId = projectId;
     }
 }

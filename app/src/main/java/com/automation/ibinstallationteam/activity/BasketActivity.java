@@ -260,6 +260,7 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
             basket.setWorkerInfo(basketObject.getIntValue(basketId+"_userState"));  // 用户信息 0 未完成 1 完成
             basket.setDeviceBound(basketObject.getIntValue(basketId+"_deviceState"));  // 设备绑定 0 未完成 1 完成
             basket.setFinishImg(basketInfo.getIntValue("pic_flg"));  // 图片上传完整 1 完成 0 未完成
+            basket.setProjectId(mProjectId);
 
             int flag = basketInfo.getIntValue("flag");  // flag: 0 进行中 1 未完成
             if(flag==0) mBasketSummaryList.get(0).add(basket);

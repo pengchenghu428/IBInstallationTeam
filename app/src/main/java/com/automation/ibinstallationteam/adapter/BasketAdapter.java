@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.automation.ibinstallationteam.R;
+import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.Basket;
 import com.automation.ibinstallationteam.entity.Order;
 import com.automation.ibinstallationteam.widget.image.SmartImageView;
@@ -30,10 +31,10 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         View mView;
         SmartImageView ivLogo;  // logo
-        TextView tvId;  // 吊篮名称
-        ImageView ivWorkerInfo;  // 完成数目
-        ImageView ivFinishImg;  // 总数目
-        ImageView ivDeviceBound;  // 日期提示
+        TextView tvId;  // 吊篮ID
+        ImageView ivWorkerInfo;  //
+        ImageView ivFinishImg;  //
+        ImageView ivDeviceBound;  //
 
         private OnItemClickListener onItemClickListener;
 
@@ -79,7 +80,10 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     public void onBindViewHolder(@NonNull BasketAdapter.ViewHolder viewHolder, int i) {
         Basket basket = mBasketList.get(i);
 
+        viewHolder.ivLogo.setImageUrl(AppConfig.FILE_SERVER_YBLIU_PATH + "/project/" +
+                basket.getProjectId() + "/" + basket.getId() + "/electrical_box.jpg");
         viewHolder.tvId.setText(basket.getId());
+
         if(basket.isWorkerInfo())
             viewHolder.ivWorkerInfo.setImageResource(R.mipmap.ic_normal);
         else
