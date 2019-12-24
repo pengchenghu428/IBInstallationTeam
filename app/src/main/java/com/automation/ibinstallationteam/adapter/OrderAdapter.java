@@ -85,9 +85,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         viewHolder.tvFinish.setText(Integer.toString(order.getFinishNum()));
         viewHolder.tvTotal.setText(Integer.toString(order.getTotalNum()));
         if(order.getFinishNum() == order.getTotalNum())
-            viewHolder.tvDateHint.setText("完成日期：");
+            viewHolder.tvDateHint.setText("开始日期：");
+            //viewHolder.tvDateHint.setText("完成日期：");
         else
-            viewHolder.tvDateHint.setText("预计完成日期：");
+            viewHolder.tvDateHint.setText("开始日期：");
+            //viewHolder.tvDateHint.setText("预计完成日期：");
         viewHolder.tvDateContent.setText(order.getCompletedTime());
     }
 

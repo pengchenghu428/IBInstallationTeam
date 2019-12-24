@@ -38,11 +38,11 @@
             style="@style/ItemLinearLayout">
             <TextView style="@style/ItemHintTextView"
                 android:id="@+id/order_state_tv"
-                android:text="订单完成度："/>
+                android:text="完成度："/>
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center">
                 <TextView
                     android:id="@+id/finish_num_tv"

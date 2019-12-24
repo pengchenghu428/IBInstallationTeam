@@ -93,7 +93,8 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
                 case BOUND_DEVICE_SUCCESS_MSG:
                     int idx = PortionMap.chinesePortion.indexOf(tmpDeviceName);
                     String imageName = "ic_" + PortionMap.englishPortion.get(idx);
-                    int imageResourceId =  getResources().getIdentifier(imageName, "mipmap", getPackageName());
+                    int imageResourceId =  getResources().getIdentifier(imageName,
+                            "mipmap", getPackageName());
                     mDeviceList.add(new Device(tmpDeviceName, imageResourceId, tmpDeviceNumber));
                     mDeviceAdapter.notifyDataSetChanged();
                     break;
@@ -135,7 +136,7 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mAddedDeviceRv.setLayoutManager(layoutManager);
         mDeviceList = new ArrayList<>();
-//        initDevices();
+//        initDevies();c
         mDeviceAdapter = new DeviceAddedAdapter(this, mDeviceList);
         mAddedDeviceRv.setAdapter(mDeviceAdapter);
         mDeviceAdapter.setOnItemClickListener(new DeviceAddedAdapter.OnItemClickListener() {
@@ -148,7 +149,8 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
             public void onDeleteClick(View view, int position) {
                 // 点击Item 中的删除按键
                 prePosition = position;
-                startActivityForResult(new Intent(DeviceBoundActivity.this, CaptureActivity.class), CAPTURE_ACTIVITY_RESULT);
+                startActivityForResult(new Intent(DeviceBoundActivity.this,
+                        CaptureActivity.class), CAPTURE_ACTIVITY_RESULT);
             }
         });
 
@@ -195,20 +197,21 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
                     /*
                      * Do Something: 和后台通讯
                      */
+                    tmpDeviceNumber = processQRContent(tmpDeviceName, tmpDeviceNumber);
                     boundNewDevice();
                 }
                 break;
             case CAPTURE_ACTIVITY_RESULT:
                 if(resultCode == RESULT_OK) {
                     String qrCode = data.getStringExtra(CaptureActivity.QR_CODE_RESULT);
+                    String deviceName = mDeviceList.get(prePosition).getName();
+                    qrCode = processQRContent(deviceName, qrCode);
                     if(qrCode.equals(mDeviceList.get(prePosition).getNumber())){
                         // 扫码和原先的序列号一致，则删除该设备
-                        String deviceName = mDeviceList.get(prePosition).getName();
-//                        String deviceNumber = mDeviceList.get(prePosition).getNumber();
                         deleteDevice(deviceName);
-
                     }else{
-                        ToastUtil.showToastTips(DeviceBoundActivity.this, "设备不一致，请确认后在此扫描！");
+                        ToastUtil.showToastTips(DeviceBoundActivity.this,
+                                "设备不一致，请确认后在此扫描！");
                     }
                 }
                 break;
@@ -289,10 +292,12 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
                         boolean isLogin = jsonObject.getBooleanValue("isLogin");
                         if(isLogin){
                             if(jsonObject.getString("create").equals("success")){
-                                ToastUtil.showToastTips(DeviceBoundActivity.this, "绑定成功");
+                                ToastUtil.showToastTips(DeviceBoundActivity.this,
+                                        "绑定成功");
                                 mHandler.sendEmptyMessage(BOUND_DEVICE_SUCCESS_MSG);
                             }else{
-                                ToastUtil.showToastTips(DeviceBoundActivity.this, "绑定失败");
+                                ToastUtil.showToastTips(DeviceBoundActivity.this,
+                                        "绑定失败");
                             }
                         }
                     }
@@ -345,10 +350,12 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
                         boolean isLogin = jsonObject.getBooleanValue("isLogin");
                         if(isLogin){
                             if(jsonObject.getString("delete").equals("success")){
-                                ToastUtil.showToastTips(DeviceBoundActivity.this, "解绑成功");
+                                ToastUtil.showToastTips(DeviceBoundActivity.this,
+                                        "解绑成功");
                                 mHandler.sendEmptyMessage(DELETE_DEVICE_SUCCESS_MSG);
                             }else{
-                                ToastUtil.showToastTips(DeviceBoundActivity.this, "解绑失败");
+                                ToastUtil.showToastTips(DeviceBoundActivity.this,
+                                        "解绑失败");
                             }
                         }
 
@@ -387,6 +394,17 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
 
     /* Other
     * */
+    private String processQRContent(String name, String number){
+        Log.d(TAG, name);
+        Log.d(TAG, number);
+        String type = getDeviceType(name);
+        if(type.equals("camera")){
+            String[] items = number.split("\\r");
+            number = items[1];
+        }
+        Log.d(TAG, number);
+        return number;
+    }
     private void initDevices(){
         mDeviceList.add(new Device("摄像头", R.mipmap.ic_camera, "DS400119873245"));
         mDeviceList.add(new Device("提升机", R.mipmap.ic_elevator, "ELE3399052710"));

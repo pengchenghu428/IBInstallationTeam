@@ -32,7 +32,7 @@
                 android:text="电柜编号："/>
             <TextView style="@style/ItemContentTextView"
                 android:id="@+id/basket_id_tv"
-                android:text="201906220001"/>
+                android:text="36FFD6054154393207782457"/>
         </LinearLayout>
 
         <!-- 人员信息 -->
