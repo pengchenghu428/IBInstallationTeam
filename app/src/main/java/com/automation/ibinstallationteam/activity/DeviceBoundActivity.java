@@ -226,6 +226,7 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
         BaseOkHttpClient.newBuilder()
                 .addHeader("Authorization", mToken)
                 .addParam("deviceId", mBasketId)
+                .addParam("type", 0)  // 返回所有组件
                 .get()
                 .url(AppConfig.GET_ELECTRIC_BOX_CONFIG)
                 .build()
