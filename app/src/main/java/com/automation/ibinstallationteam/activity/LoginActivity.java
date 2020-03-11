@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private final static int LOGONIN_REGISTER_NOT_ALLOW = 101;
     private final static int LOGONIN_USER_NOT_EXIST = 102;
     private final static int LOGONIN_PASSWORD_ERROR = 103;
+    private final static int LOGON_WITH_ERROR_ROLE = 104;
 
     private SharedPreferences pref;  // 本地记录文件
     private SharedPreferences.Editor editor;
@@ -83,6 +84,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     break;
                 case LOGONIN_PASSWORD_ERROR: // 密码错误
                     mCommonDialog = initDialog(getString(R.string.dialog_login_fail));
+                    mCommonDialog.show();
+                    break;
+                case LOGON_WITH_ERROR_ROLE:
+                    mCommonDialog = initDialog(getString(R.string.dialog_error_role));
                     mCommonDialog.show();
                     break;
                 default:
@@ -188,6 +193,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     String userString = jsonObject.getString("userInfo");
                     mUserInfo =JSON.parseObject(userString,UserInfo.class);
                     if (isLogin){  // 登录成功
+                        // 权限限制
+                        if (!mUserInfo.getUserRole().equals("InstallTeam")){
+                            mHandler.sendEmptyMessage(LOGON_WITH_ERROR_ROLE);
+                            return;
+                        }
+
                         String token = jsonObject.getString("token");
                         saveTokenPref(token); // 保存用户状态
                         mHandler.sendEmptyMessage(LOGONIN_SUCCESS);
