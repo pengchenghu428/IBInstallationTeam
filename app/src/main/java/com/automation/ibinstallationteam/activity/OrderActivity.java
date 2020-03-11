@@ -261,16 +261,19 @@ public class OrderActivity extends AppCompatActivity implements View.OnTouchList
             int installSum = projectInfoJsonObject.getIntValue(projectId+"installSum");
             order.setTotalNum(allNum);
             order.setFinishNum(installSum);
-            JSONObject projectObject = JSON.parseObject(projectInfoJsonObject.getString(projectId));
-            order.setName(projectObject.getString("projectName"));
-            order.setCompletedTime(projectObject.getString("projectStart"));
-            order.setId(projectId);
-            mOrderSummaryList.get(0).add(order);
+            // 防止后台穿错数据 0310
+            if (projectInfoJsonObject.getString(projectId) != null) {
+                JSONObject projectObject = JSON.parseObject(projectInfoJsonObject.getString(projectId));
+                order.setName(projectObject.getString("projectName"));
+                order.setCompletedTime(projectObject.getString("projectStart"));
+                order.setId(projectId);
+                mOrderSummaryList.get(0).add(order);
 
-            if(allNum!=installSum)
-                mOrderSummaryList.get(1).add(order);
-            else
-                mOrderSummaryList.get(2).add(order);
+                if (allNum != installSum)
+                    mOrderSummaryList.get(1).add(order);
+                else
+                    mOrderSummaryList.get(2).add(order);
+            }
         }
         mHandler.sendEmptyMessage(SWITCH_ORDER_STATE_MSG);
     }

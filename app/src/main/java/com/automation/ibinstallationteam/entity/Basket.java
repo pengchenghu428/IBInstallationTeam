@@ -57,8 +57,10 @@ public class Basket {
         this.finishImg = finishImg;
     }
     public void setFinishImg(int finishImg) {
-        if(finishImg==0) this.finishImg=false;
-        else this.finishImg=true;
+        if(finishImg == 0)
+            this.finishImg = false;
+        else
+            this.finishImg = true;
     }
 
     public boolean isDeviceBound() {
