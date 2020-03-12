@@ -157,6 +157,7 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
                 startActivity(intent);
                 break;
             case R.id.image_display_iv:  // 点击图片，查看大图，尚未完成
+
                 break;
             case R.id.upload_btn:
                 if(photoFile == null) {

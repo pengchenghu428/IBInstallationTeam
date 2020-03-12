@@ -258,7 +258,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnTouchList
 
             Order order = new Order();
             int allNum = projectInfoJsonObject.getIntValue(projectId+"allNum");
-            int installSum = projectInfoJsonObject.getIntValue(projectId+"installSum");
+            int installSum = projectInfoJsonObject.getIntValue(projectId+"installedSum");
             order.setTotalNum(allNum);
             order.setFinishNum(installSum);
             // 防止后台穿错数据 0310

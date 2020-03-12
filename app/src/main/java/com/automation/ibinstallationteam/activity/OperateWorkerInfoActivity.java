@@ -28,6 +28,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.automation.ibinstallationteam.R;
 import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.UserInfo;
+import com.automation.ibinstallationteam.utils.FormatUtil;
 import com.automation.ibinstallationteam.utils.ToastUtil;
 import com.automation.ibinstallationteam.utils.ftp.FTPUtil;
 import com.automation.ibinstallationteam.utils.okhttp.BaseCallBack;
@@ -46,6 +47,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 
@@ -220,8 +223,18 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
         String workerName = mNameEv.getText().toString();
         String workerPhoneNumber = mPhoneNumberEv.getText().toString();
         String workerIdCardNumber = mIdCardNumberEv.getText().toString();
+        // 判断空值
         if(workerName.equals("") || workerPhoneNumber.equals("") || workerIdCardNumber.equals("")){
             ToastUtil.showToastTips(OperateWorkerInfoActivity.this, "请确认所有信息均填写完毕");
+            return;
+        }
+        // 判断是否合法
+        if(!FormatUtil.isMobileNumber(workerPhoneNumber)){
+            ToastUtil.showToastTips(OperateWorkerInfoActivity.this, "请输入正确的手机号码！");
+            return;
+        }
+        if(!FormatUtil.isIDNumber(workerIdCardNumber)){
+            ToastUtil.showToastTips(OperateWorkerInfoActivity.this, "请输入正确的身份证号码！！");
             return;
         }
         Intent intent = new Intent();
@@ -500,7 +513,6 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
         mLoadingDialog = new LoadingDialog(OperateWorkerInfoActivity.this, "正在上传...");
         mLoadingDialog.setCancelable(false);
     }
-
 
     /*
      * 本地信息交互

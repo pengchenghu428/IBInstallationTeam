@@ -45,8 +45,10 @@ public class Basket {
         this.workerInfo = workerInfo;
     }
     public void setWorkerInfo(int workerInfo) {
-        if(workerInfo==0) this.workerInfo=false;
-        else this.workerInfo=true;
+        if(workerInfo==0)
+            this.workerInfo=false;
+        else
+            this.workerInfo=true;
     }
 
     public boolean isFinishImg() {
