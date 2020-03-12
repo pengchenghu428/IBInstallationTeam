@@ -27,9 +27,11 @@ import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.PortionMap;
 import com.automation.ibinstallationteam.utils.ToastUtil;
 import com.automation.ibinstallationteam.utils.ftp.FTPUtil;
+import com.automation.ibinstallationteam.widget.ScaleImageView;
 import com.automation.ibinstallationteam.widget.dialog.LoadingDialog;
 import com.automation.ibinstallationteam.widget.dialog.ProgressAlertDialog;
 import com.automation.ibinstallationteam.widget.image.SmartImageView;
+import com.automation.ibinstallationteam.widget.image.WebImage;
 import com.heynchy.compress.CompressImage;
 import com.heynchy.compress.compressinterface.CompressLubanListener;
 import com.hjq.permissions.OnPermission;
@@ -40,6 +42,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -78,6 +81,10 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
     private String remoteFileUrl;
     private File photoFile ; // 图片文件
     private Uri photoUrl ; // 图片URL
+
+    private List<Bitmap> mWorkPhotos = new ArrayList<>();  // bitmap 位图
+    private List<String> mFileNameList = new ArrayList<>(); // 文件名
+
 
     // FTP 文件服务器
     private FTPUtil mFTPClient;
@@ -157,7 +164,14 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
                 startActivity(intent);
                 break;
             case R.id.image_display_iv:  // 点击图片，查看大图，尚未完成
+                getBitmaps();
 
+                if(mWorkPhotos.size() > 0) {
+                    // 显示dislog
+                    ScaleImageView scaleImageView = new ScaleImageView(SingleImgUploadActivity.this);
+                    scaleImageView.setUrls_and_Bitmaps(mFileNameList, mWorkPhotos, 0);
+                    scaleImageView.create();
+                }
                 break;
             case R.id.upload_btn:
                 if(photoFile == null) {
@@ -353,5 +367,19 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
                 && XXPermissions.isHasPermission(SingleImgUploadActivity.this, Permission.CAMERA))
             return true;
         return false;
+    }
+
+    // 初始化图片位图:直接从缓存中获取
+    private void getBitmaps(){
+        mWorkPhotos.clear();
+        mFileNameList.clear();
+
+        String url = remoteFileUrl;
+        Bitmap bm = WebImage.webImageCache.get(url);
+        if (bm != null) {
+            mWorkPhotos.add(null);
+            mWorkPhotos.set(0, bm);
+            mFileNameList.add(mUploadImageType);
+        }
     }
 }

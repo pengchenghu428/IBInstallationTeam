@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.automation.ibinstallationteam.R;
+import com.automation.ibinstallationteam.adapter.ScaleImageAdapter;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;
@@ -123,8 +125,8 @@ public class ScaleImageView {
         }
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(startPosition);
-        imageDate.setText("2019年12月10日");  // 待更改,设置左上角图片信息
-        imageOthers.setText("12:25 | 江苏省 南京市 玄武区");
+        imageDate.setText("");  // 待更改,设置左上角图片信息
+        imageOthers.setText("");
     }
 
 }

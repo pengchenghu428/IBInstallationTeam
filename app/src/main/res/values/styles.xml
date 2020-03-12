@@ -397,4 +397,10 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <!-- work photo activity -->
+    <!-- 照片查看器 -->
+    <style name="Dialog_Fullscreen">
+        <item name="android:windowFullscreen">false</item>
+    </style>
+
 </resources>

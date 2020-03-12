@@ -33,8 +33,10 @@ import com.automation.ibinstallationteam.utils.ToastUtil;
 import com.automation.ibinstallationteam.utils.ftp.FTPUtil;
 import com.automation.ibinstallationteam.utils.okhttp.BaseCallBack;
 import com.automation.ibinstallationteam.utils.okhttp.BaseOkHttpClient;
+import com.automation.ibinstallationteam.widget.ScaleImageView;
 import com.automation.ibinstallationteam.widget.dialog.LoadingDialog;
 import com.automation.ibinstallationteam.widget.image.SmartImageView;
+import com.automation.ibinstallationteam.widget.image.WebImage;
 import com.heynchy.compress.CompressImage;
 import com.heynchy.compress.compressinterface.CompressLubanListener;
 import com.hjq.permissions.OnPermission;
@@ -45,6 +47,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -91,6 +94,9 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
     private String remoteFileUrl;
     private File photoFile ; // 图片文件
     private Uri photoUrl ; // 图片URL
+
+    private List<Bitmap> mWorkPhotos = new ArrayList<>();  // bitmap 位图
+    private List<String> mFileNameList = new ArrayList<>(); // 文件名
 
     // FTP 文件服务器
     private FTPUtil mFTPClient;
@@ -198,6 +204,7 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
                 return false;
             }
         });
+        mOperationIv.setOnClickListener(this);
         mConfirmBtn.setOnClickListener(this);
         mModityBtn.setOnClickListener(this);
         mDeleteBtn.setOnClickListener(this);
@@ -239,6 +246,15 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
         }
         Intent intent = new Intent();
         switch (v.getId()){
+            case R.id.operation_iv:
+                getBitmaps();
+                if(mWorkPhotos.size() > 0) {
+                    // 显示dislog
+                    ScaleImageView scaleImageView = new ScaleImageView(OperateWorkerInfoActivity.this);
+                    scaleImageView.setUrls_and_Bitmaps(mFileNameList, mWorkPhotos, 0);
+                    scaleImageView.create();
+                }
+                break;
             case R.id.confirm_worker_info_btn:  // 确认按钮
                 mRemotePath = "tempUser/" + workerPhoneNumber + "/";  // 图片上传地址
                 remoteFileName = "operation.jpg";
@@ -572,5 +588,19 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
                 && XXPermissions.isHasPermission(OperateWorkerInfoActivity.this, Permission.CAMERA))
             return true;
         return false;
+    }
+
+    // 初始化图片位图:直接从缓存中获取
+    private void getBitmaps(){
+        mWorkPhotos.clear();
+        mFileNameList.clear();
+
+        String url = remoteFileUrl;
+        Bitmap bm = WebImage.webImageCache.get(url);
+        if (bm != null) {
+            mWorkPhotos.add(null);
+            mWorkPhotos.set(0, bm);
+            mFileNameList.add("操作证");
+        }
     }
 }

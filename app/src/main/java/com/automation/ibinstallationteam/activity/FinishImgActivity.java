@@ -183,8 +183,10 @@ public class FinishImgActivity extends AppCompatActivity implements View.OnClick
             case R.id.verify_finish_img_btn:
                 // 检查图片
                 boolean flag = isAllImageExist();
-                if(flag) updateFinishImgState();
-                else ToastUtil.showToastTips(FinishImgActivity.this, "图片尚未全部上传，请完善图片");
+                if(flag)
+                    updateFinishImgState();
+                else
+                    ToastUtil.showToastTips(FinishImgActivity.this, "图片尚未全部上传，请完善图片");
                 break;
             default:
                 break;
