@@ -1,4 +1,4 @@
-package com.automation.ibinstallationteam.activity;
+package com.automation.ibinstallationteam.activity.manage.image;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -19,6 +19,9 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.ibinstallationteam.R;
+import com.automation.ibinstallationteam.activity.common.MultiImgUploadActivity;
+import com.automation.ibinstallationteam.activity.common.SingleImgUploadActivity;
+import com.automation.ibinstallationteam.activity.manage.InstallManageActivity;
 import com.automation.ibinstallationteam.adapter.PortionAdapter;
 import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.Portion;
@@ -33,8 +36,6 @@ import com.scwang.smartrefresh.header.BezierCircleHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
-import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.IOException;
 import java.util.ArrayList;

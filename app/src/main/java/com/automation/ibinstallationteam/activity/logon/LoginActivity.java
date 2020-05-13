@@ -1,11 +1,10 @@
-package com.automation.ibinstallationteam.activity;
+package com.automation.ibinstallationteam.activity.logon;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -17,12 +16,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.ibinstallationteam.R;
+import com.automation.ibinstallationteam.activity.common.ITParimaryActivity;
 import com.automation.ibinstallationteam.entity.UserInfo;
 import com.automation.ibinstallationteam.utils.ToastUtil;
 import com.automation.ibinstallationteam.utils.http.HttpUtil;

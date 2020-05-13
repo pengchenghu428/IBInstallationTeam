@@ -1,4 +1,4 @@
-package com.automation.ibinstallationteam.activity;
+package com.automation.ibinstallationteam.activity.common;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.automation.ibinstallationteam.R;
+import com.automation.ibinstallationteam.activity.manage.image.CheckExampleImgActivity;
+import com.automation.ibinstallationteam.activity.manage.image.FinishImgActivity;
 import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.PortionMap;
 import com.automation.ibinstallationteam.utils.ToastUtil;
@@ -43,10 +45,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/* 多张图片上传
+/* 单张图片上传
 * */
 
-public class MultiImgUploadActivity extends AppCompatActivity implements View.OnClickListener {
+public class SingleImgUploadActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String TAG = "SingleImgUploadActivity";
 
@@ -55,8 +57,7 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
     public static final int UPLODA_IMAGE_FAILURED_MSG = 102;
 
     // 页面跳转标志
-    public static final int TAKE_LEFT_PHOTO_FROM_CAMERA = 1;  // 照相机
-    public static final int TAKE_RIGHT_PHOTO_FROM_CAMERA = 2;  // 照相机
+    public static final int TAKE_PHOTO_FROM_CAMERA= 2;  // 照相机
 
     // 相册位置
     public static final String CAMERA_PATH = Environment.getExternalStorageDirectory() +
@@ -64,29 +65,24 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
 
     // 控件
     private TextView mCheckExampleTv;
-    private SmartImageView mLeftUploadImageIv;  // 左图上传
-    private Button mLeftUploadBtn;
-    private SmartImageView mRightUploadImageIv;  // 右图上传
-    private Button mRightUploadBtn;
+    private SmartImageView mUploadImageIv;
+    private Button mUploadBtn;
 
     // 全局变量
     private String projectId;  // 项目
     private String basketId;  // 吊篮
     private int imageType;  // 图片类型
 
-    private String mUploadImageType = "提升机";  // 上传图片类型，如提升机、安全锁等；
+    private String mUploadImageType;  // 上传图片类型，如电柜、摄像头等；
+    private String fileName;  // 图片名
     private String remoteFileName; // 远程文件名
-    private String leftFileName;  // 左图片名
-    private File leftPhotoFile ; // 图片文件
-    private Uri leftPhotoUrl ; // 图片URL
-    private String leftRemoteFileUrl;
-    private String rightFileName;  // 右图片名
-    private File rightPhotoFile ; // 图片文件
-    private Uri rightPhotoUrl ; // 图片URL
-    private String rightRemoteFileUrl;
+    private String remoteFileUrl;
+    private File photoFile ; // 图片文件
+    private Uri photoUrl ; // 图片URL
 
     private List<Bitmap> mWorkPhotos = new ArrayList<>();  // bitmap 位图
     private List<String> mFileNameList = new ArrayList<>(); // 文件名
+
 
     // FTP 文件服务器
     private FTPUtil mFTPClient;
@@ -99,9 +95,14 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
             switch (msg.what) {
                 case UPLODA_IMAGE_SUCCESS_MSG:
                     mLoadingDialog.dismiss();
+                    ToastUtil.showToastTips(SingleImgUploadActivity.this,
+                            "图片上传成功");
+                    finish();
                     break;
                 case UPLODA_IMAGE_FAILURED_MSG:
                     mLoadingDialog.dismiss();
+                    ToastUtil.showToastTips(SingleImgUploadActivity.this,
+                            "图片上传失败");
                     break;
             }
         }
@@ -110,8 +111,7 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_multi_img_upload);
-
+        setContentView(R.layout.activity_single_img_upload);
         if(!isHasPermission()) requestPermission();
 
         initIntent();
@@ -120,7 +120,7 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
     }
 
     /* 初始化
-     * */
+    * */
     private void initWidgets(){
         // 顶部导航栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -132,36 +132,24 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
 
         mCheckExampleTv = (TextView) findViewById(R.id.check_example_img_tv);
         mCheckExampleTv.setOnClickListener(this);
-        if(imageType<6)
+        if(imageType<2)
             mCheckExampleTv.setVisibility(View.VISIBLE);  // 显示示例图片选项（电柜和提升机）
         else
             mCheckExampleTv.setVisibility(View.GONE);  // 不显示示例图片选项
 
-        mLeftUploadImageIv = (SmartImageView) findViewById(R.id.left_image_display_iv);
-        mLeftUploadImageIv.setImageUrl(leftRemoteFileUrl, R.mipmap.ic_add_upload_image);
-        mLeftUploadImageIv.setOnClickListener(this);
-        mLeftUploadImageIv.setOnLongClickListener(new View.OnLongClickListener() {
+        mUploadImageIv = (SmartImageView) findViewById(R.id.image_display_iv);
+        mUploadImageIv.setImageUrl(remoteFileUrl, R.mipmap.ic_add_upload_image);
+        mUploadImageIv.setOnClickListener(this);
+        mUploadImageIv.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                startCameraActivity("left");  // 长按进入拍摄模式
+                startCameraActivity();  // 长按进入拍摄模式
                 return false;
             }
         });
-        mLeftUploadBtn = (Button) findViewById(R.id.left_upload_btn);
-        mLeftUploadBtn.setOnClickListener(this);
 
-        mRightUploadImageIv = (SmartImageView) findViewById(R.id.right_image_display_iv);
-        mRightUploadImageIv.setImageUrl(rightRemoteFileUrl, R.mipmap.ic_add_upload_image);
-        mRightUploadImageIv.setOnClickListener(this);
-        mRightUploadImageIv.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                startCameraActivity("right");  // 长按进入拍摄模式
-                return false;
-            }
-        });
-        mRightUploadBtn = (Button) findViewById(R.id.right_upload_btn);
-        mRightUploadBtn.setOnClickListener(this);
+        mUploadBtn = (Button) findViewById(R.id.upload_btn);
+        mUploadBtn.setOnClickListener(this);
 
         initLoadingDialog();
     }
@@ -173,43 +161,34 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.check_example_img_tv:  // 跳转到查看示例图片页面
-                Intent intent = new Intent(MultiImgUploadActivity.this, CheckExampleImgActivity.class);
+                Intent intent = new Intent(SingleImgUploadActivity.this, CheckExampleImgActivity.class);
                 intent.putExtra("image_type_name", PortionMap.englishPortion.get(imageType));
                 startActivity(intent);
                 break;
-            case R.id.left_image_display_iv:  // 点击图片，查看大图，尚未完成
-                getBitmaps("left");
-                // 显示dislog
-                if (mWorkPhotos.size() > 0) {
-                    ScaleImageView scaleImageView = new ScaleImageView(MultiImgUploadActivity.this);
+            case R.id.image_display_iv:  // 点击图片，查看大图，尚未完成
+                getBitmaps();
+
+                if(mWorkPhotos.size() > 0) {
+                    // 显示dislog
+                    ScaleImageView scaleImageView = new ScaleImageView(SingleImgUploadActivity.this);
                     scaleImageView.setUrls_and_Bitmaps(mFileNameList, mWorkPhotos, 0);
                     scaleImageView.create();
                 }
                 break;
-            case R.id.left_upload_btn:
-                if(leftPhotoFile==null){
-                    ToastUtil.showToastTips(MultiImgUploadActivity.this, "该图片已上传");
+            case R.id.upload_btn:
+                if(photoFile == null) {  // 未拍摄
+                    String tips = "";
+                    if (mUploadImageIv.getBitmap() == null){  // 图片为空
+                        tips = "图片为空，请重新拍摄后上传";
+                    }else{
+                        tips = "该图片已上传";
+                    }
+
+                    ToastUtil.showToastTips(SingleImgUploadActivity.this, tips);
                     break;
                 }
                 mLoadingDialog.show();
-                startSendImage("left");  // 上传图片
-                break;
-            case R.id.right_image_display_iv:  // 点击图片，查看大图，尚未完成
-                getBitmaps("right");
-                // 显示dislog
-                if (mWorkPhotos.size() > 0) {
-                    ScaleImageView scaleImageView1 = new ScaleImageView(MultiImgUploadActivity.this);
-                    scaleImageView1.setUrls_and_Bitmaps(mFileNameList, mWorkPhotos, 0);
-                    scaleImageView1.create();
-                }
-                break;
-            case R.id.right_upload_btn:
-                if(rightPhotoFile==null){
-                    ToastUtil.showToastTips(MultiImgUploadActivity.this, "该图片已上传");
-                    break;
-                }
-                mLoadingDialog.show();
-                startSendImage("right");  // 上传图片
+                startSendImage();  // 上传图片
                 break;
         }
     }
@@ -228,50 +207,28 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case TAKE_LEFT_PHOTO_FROM_CAMERA:        // 拍摄
+            case TAKE_PHOTO_FROM_CAMERA:        // 拍摄
                 if(resultCode == RESULT_CANCELED){
-                    Toast.makeText(MultiImgUploadActivity.this, "取消了拍照", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SingleImgUploadActivity.this, "取消了拍照", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                String photoFilePath = CAMERA_PATH + "IMAGE_"+ leftFileName +".jpg";
-                String compressFilePath = CAMERA_PATH + "IMAGE_"+ leftFileName +"_compress.jpg";
+                String photoFilePath = CAMERA_PATH + "IMAGE_"+ fileName +".jpg";
+                String compressFilePath = CAMERA_PATH + "IMAGE_"+ fileName +"_compress.jpg";
                 compressImage(photoFilePath, compressFilePath);  // 压缩图片
-                Bitmap photo = BitmapFactory.decodeFile(compressFilePath);
-                mLeftUploadImageIv.setImageBitmap(photo);  // 显示图片
-                myDeleteFile(leftPhotoFile);  // 删除原图
-                leftPhotoFile = new File(compressFilePath);  // 加载压缩后的图像
+                Bitmap  photo = BitmapFactory.decodeFile(compressFilePath);
+                mUploadImageIv.setImageBitmap(photo);  // 显示图片
+                myDeleteFile(photoFile);  // 删除原图
+                photoFile = new File(compressFilePath);  // 加载压缩后的图像
 
                 try {
-                    MediaStore.Images.Media.insertImage(getContentResolver(), leftPhotoFile.getAbsolutePath(),
-                            leftPhotoFile.getName(), null);//图片插入到系统图库
+                    MediaStore.Images.Media.insertImage(getContentResolver(), photoFile.getAbsolutePath(),
+                            photoFile.getName(), null);//图片插入到系统图库
                 }catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
                 Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                intent.setData(Uri.parse("file://" + leftPhotoFile.getAbsolutePath()));
+                intent.setData(Uri.parse("file://" + photoFile.getAbsolutePath()));
                 sendBroadcast(intent);
-                break;
-            case TAKE_RIGHT_PHOTO_FROM_CAMERA:        // 拍摄
-                if(resultCode == RESULT_CANCELED){
-                    Toast.makeText(MultiImgUploadActivity.this, "取消了拍照", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String photoFilePath2 = CAMERA_PATH + "IMAGE_"+ rightFileName +".jpg";
-                String compressFilePath2 = CAMERA_PATH + "IMAGE_"+ rightFileName +"_compress.jpg";
-                compressImage(photoFilePath2, compressFilePath2);  // 压缩图片
-                Bitmap photo2 = BitmapFactory.decodeFile(compressFilePath2);
-                mRightUploadImageIv.setImageBitmap(photo2);  // 显示图片
-                myDeleteFile(rightPhotoFile);  // 删除原图
-                rightPhotoFile = new File(compressFilePath2);  // 加载压缩后的图像
-                try {
-                    MediaStore.Images.Media.insertImage(getContentResolver(), rightPhotoFile.getAbsolutePath(),
-                            rightPhotoFile.getName(), null);//图片插入到系统图库
-                }catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                Intent intent2 = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                intent2.setData(Uri.parse("file://" + rightPhotoFile.getAbsolutePath()));
-                sendBroadcast(intent2);
                 break;
             default: break;
         }
@@ -289,36 +246,23 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
         mRemotePath = "project/" + projectId + "/" + basketId + "/";  // 图片上传地址
         mUploadImageType = PortionMap.chinesePortion.get(imageType);
         remoteFileName = PortionMap.englishPortion.get(imageType);
-        leftRemoteFileUrl = AppConfig.FILE_SERVER_YBLIU_PATH + mRemotePath + remoteFileName + "_left.jpg";
-        rightRemoteFileUrl = AppConfig.FILE_SERVER_YBLIU_PATH + mRemotePath + remoteFileName + "_right.jpg";
+        remoteFileUrl = AppConfig.FILE_SERVER_YBLIU_PATH + mRemotePath + remoteFileName + ".jpg";
     }
     // 照相机
-    public void startCameraActivity(String type) {
+    public void startCameraActivity() {
         Intent intent =  new Intent(MediaStore.ACTION_IMAGE_CAPTURE);   //跳转至拍照页面
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         Date date = new Date(System.currentTimeMillis());
-        if(type.equals("left")) {
-            leftFileName = format.format(date);
-            leftPhotoFile = new File(CAMERA_PATH, "IMAGE_" + leftFileName + ".jpg");
-            Log.i(TAG, getPackageName() + ".fileprovider");
-            leftPhotoUrl = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", leftPhotoFile);
-            Log.i(TAG, leftPhotoUrl.toString());
-            // 拍照后的保存路径
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, leftPhotoUrl);
-            startActivityForResult(intent, TAKE_LEFT_PHOTO_FROM_CAMERA);
-        }else{
-            rightFileName = format.format(date);
-            rightPhotoFile = new File(CAMERA_PATH, "IMAGE_" + rightFileName + ".jpg");
-            Log.i(TAG, getPackageName() + ".fileprovider");
-            rightPhotoUrl = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", rightPhotoFile);
-            Log.i(TAG, rightPhotoUrl.toString());
-            // 拍照后的保存路径
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, rightPhotoUrl);
-            startActivityForResult(intent, TAKE_RIGHT_PHOTO_FROM_CAMERA);
-        }
+        fileName = format.format(date);
+        photoFile = new File(CAMERA_PATH, "IMAGE_"+ fileName + ".jpg");
+        Log.i(TAG,getPackageName() + ".fileprovider");
+        photoUrl = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", photoFile);
+        Log.i(TAG,photoUrl.toString());
+        // 拍照后的保存路径
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUrl);
+        startActivityForResult(intent, TAKE_PHOTO_FROM_CAMERA);
     }
-    // 压缩图像
-    // 进行Luban算法压缩图片
+    // Luban算法压缩图片
     private void compressImage(final String filePath, final String savePath){
         runOnUiThread(new Runnable() {
             @Override
@@ -358,24 +302,14 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
     /*
      * 上传身份证图片至服务器
      */
-    private void startSendImage(String type){
-        final File photoFile;
-        final String fileName;
-        if (type.equals("left")){
-            photoFile = leftPhotoFile;
-            fileName = remoteFileName + "_left.jpg";
-        }else{
-            photoFile = rightPhotoFile;
-            fileName = remoteFileName + "_right.jpg";
-        }
-
+    private void startSendImage(){
         new Thread() {
             public void run() {
                 try {
                     // 上传文件
                     mFTPClient.openConnect();  // 建立连接
                     mFTPClient.uploadingInit(mRemotePath); // 上传文件初始化
-                    mFTPClient.uploadingSingleRenameFile(photoFile, fileName);  // 上传图片
+                    mFTPClient.uploadingSingleRenameFile(photoFile, remoteFileName + ".jpg");  // 上传图片
                     mFTPClient.closeConnect();  // 关闭连接
                     mHandler.sendEmptyMessage(UPLODA_IMAGE_SUCCESS_MSG);
                 } catch (IOException e) {
@@ -393,16 +327,19 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
     }
     // 加载弹窗
     private void initLoadingDialog(){
-        mLoadingDialog = new LoadingDialog(MultiImgUploadActivity.this, "正在上传...");
+        mLoadingDialog = new LoadingDialog(SingleImgUploadActivity.this, "正在上传...");
         mLoadingDialog.setCancelable(false);
     }
 
 
     /*
+     * 权限申请
+     */
+    /*
      * 申请权限
      */
     private void requestPermission() {
-        XXPermissions.with(MultiImgUploadActivity.this)
+        XXPermissions.with(SingleImgUploadActivity.this)
                 .constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
                 .permission(Permission.Group.STORAGE) //支持请求6.0悬浮窗权限8.0请求安装权限
                 .permission(Permission.CAMERA)
@@ -413,7 +350,7 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
                             onResume();
 
                         }else {
-                            Toast.makeText(MultiImgUploadActivity.this,
+                            Toast.makeText(SingleImgUploadActivity.this,
                                     "必须同意所有的权限才能使用本程序", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -421,12 +358,12 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
                     @Override
                     public void noPermission(List<String> denied, boolean quick) {
                         if(quick) {
-                            Toast.makeText(MultiImgUploadActivity.this, "被永久拒绝授权，请手动授予权限",
+                            Toast.makeText(SingleImgUploadActivity.this, "被永久拒绝授权，请手动授予权限",
                                     Toast.LENGTH_SHORT).show();
                             // 如果是被永久拒绝就跳转到应用权限系统设置页面
-                            XXPermissions.gotoPermissionSettings(MultiImgUploadActivity.this);
+                            XXPermissions.gotoPermissionSettings(SingleImgUploadActivity.this);
                         }else {
-                            Toast.makeText(MultiImgUploadActivity.this, "获取权限失败",
+                            Toast.makeText(SingleImgUploadActivity.this, "获取权限失败",
                                     Toast.LENGTH_SHORT).show();
                             finish();
                         }
@@ -435,26 +372,22 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
     }
     // 是否有权限：摄像头、拨打电话
     private boolean isHasPermission() {
-        if (XXPermissions.isHasPermission(MultiImgUploadActivity.this, Permission.Group.STORAGE)
-                && XXPermissions.isHasPermission(MultiImgUploadActivity.this, Permission.CAMERA))
+        if (XXPermissions.isHasPermission(SingleImgUploadActivity.this, Permission.Group.STORAGE)
+                && XXPermissions.isHasPermission(SingleImgUploadActivity.this, Permission.CAMERA))
             return true;
         return false;
     }
 
     // 初始化图片位图:直接从缓存中获取
-    private void getBitmaps(String type){
+    private void getBitmaps(){
         mWorkPhotos.clear();
         mFileNameList.clear();
 
-        String url;
-        if (type.equals("left"))
-            url = leftRemoteFileUrl;
-        else
-            url = rightRemoteFileUrl;
+        String url = remoteFileUrl;
         Bitmap bm = WebImage.webImageCache.get(url);
         if (bm != null) {
             mWorkPhotos.add(null);
-            mWorkPhotos.set(0, WebImage.webImageCache.get(url));
+            mWorkPhotos.set(0, bm);
             mFileNameList.add(mUploadImageType);
         }
     }

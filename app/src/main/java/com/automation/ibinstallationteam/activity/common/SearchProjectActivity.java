@@ -1,11 +1,11 @@
-package com.automation.ibinstallationteam.activity;
+package com.automation.ibinstallationteam.activity.common;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.automation.ibinstallationteam.R;
-import com.automation.ibinstallationteam.entity.Basket;
+import com.automation.ibinstallationteam.activity.manage.BasketActivity;
 import com.automation.ibinstallationteam.widget.searchview.ICallBack;
 import com.automation.ibinstallationteam.widget.searchview.SearchView;
 import com.automation.ibinstallationteam.widget.searchview.bCallBack;

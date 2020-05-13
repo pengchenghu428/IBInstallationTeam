@@ -1,4 +1,4 @@
-package com.automation.ibinstallationteam.activity;
+package com.automation.ibinstallationteam.activity.manage.worker;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.ibinstallationteam.R;
+import com.automation.ibinstallationteam.activity.manage.InstallManageActivity;
 import com.automation.ibinstallationteam.adapter.WorkerInfoAdapter;
 import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.UserInfo;

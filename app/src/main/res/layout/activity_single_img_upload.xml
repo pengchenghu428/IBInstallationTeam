@@ -27,25 +27,33 @@
             android:textSize="@dimen/textSize_16"/>
 
         <!-- 图片显示画布 -->
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:orientation="vertical"
             android:background="@color/colorMainBackground">
+            <TextView
+                android:id="@+id/hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_below="@+id/image_display_iv"
+                android:text="单击查看大图，长按拍摄上传"/>
             <!-- 上传的图 -->
             <com.automation.ibinstallationteam.widget.image.SmartImageView
                 android:id="@+id/image_display_iv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true"
                 android:layout_margin="5dp"
                 android:src="@mipmap/ic_add_upload_image"
                 android:scaleType="fitCenter"
                 android:background="@drawable/bg_white_quai"/>
-        </RelativeLayout>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/upload_btn"

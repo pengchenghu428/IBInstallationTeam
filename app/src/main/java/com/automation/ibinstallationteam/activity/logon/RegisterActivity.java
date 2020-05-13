@@ -1,4 +1,4 @@
-package com.automation.ibinstallationteam.activity;
+package com.automation.ibinstallationteam.activity.logon;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -14,12 +14,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -32,7 +29,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -313,7 +309,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onClick(Dialog dialog, boolean confirm) {
                         if(confirm){
-                            startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
+                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                             finish();
                         }else{
                             dialog.dismiss();

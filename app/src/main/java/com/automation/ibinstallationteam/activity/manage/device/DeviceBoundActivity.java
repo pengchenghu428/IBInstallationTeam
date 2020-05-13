@@ -1,4 +1,4 @@
-package com.automation.ibinstallationteam.activity;
+package com.automation.ibinstallationteam.activity.manage.device;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.ibinstallationteam.R;
+import com.automation.ibinstallationteam.activity.manage.InstallManageActivity;
 import com.automation.ibinstallationteam.adapter.DeviceAddedAdapter;
 import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.Device;

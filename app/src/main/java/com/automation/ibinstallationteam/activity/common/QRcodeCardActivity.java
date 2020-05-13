@@ -1,4 +1,4 @@
-package com.automation.ibinstallationteam.activity;
+package com.automation.ibinstallationteam.activity.common;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;

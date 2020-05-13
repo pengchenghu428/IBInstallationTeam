@@ -1,4 +1,4 @@
-package com.automation.ibinstallationteam.activity;
+package com.automation.ibinstallationteam.activity.common;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.automation.ibinstallationteam.R;
+import com.automation.ibinstallationteam.activity.logon.LoginActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;

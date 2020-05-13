@@ -1,4 +1,4 @@
-package com.automation.ibinstallationteam.activity;
+package com.automation.ibinstallationteam.activity.common;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -18,6 +18,8 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.ibinstallationteam.R;
+import com.automation.ibinstallationteam.activity.logon.LoginActivity;
+import com.automation.ibinstallationteam.activity.manage.OrderActivity;
 import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.UserInfo;
 import com.automation.ibinstallationteam.utils.okhttp.BaseCallBack;

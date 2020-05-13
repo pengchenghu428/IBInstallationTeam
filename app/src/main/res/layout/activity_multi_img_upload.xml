@@ -26,6 +26,14 @@
         android:text="查看示例"
         android:textSize="@dimen/textSize_16"/>
 
+        <!-- 查看示例 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:text="单击查看大图，长按拍摄上传" />
         <!-- 图片显示画布 -->
         <LinearLayout
             style="@style/MultiLinearLayout">

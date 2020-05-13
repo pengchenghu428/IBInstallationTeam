@@ -28,25 +28,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.CheckExampleImgActivity"></activity>
-        <activity android:name=".activity.OperateWorkerInfoActivity" />
-        <activity android:name=".activity.WorkerInfoActivity" />
-        <activity android:name=".activity.DeviceChooseActivity" />
-        <activity android:name=".activity.DeviceBoundActivity" />
-        <activity android:name=".activity.MultiImgUploadActivity" />
-        <activity android:name=".activity.SingleImgUploadActivity" />
-        <activity android:name=".activity.FinishImgActivity" />
-        <activity android:name=".activity.BasketActivity" />
-        <activity android:name=".activity.InstallManageActivity" />
-        <activity android:name=".activity.OrderActivity" />
-        <activity android:name=".activity.ProjectDetailsActivity" />
+        <activity android:name=".activity.manage.image.CheckExampleImgActivity"></activity>
+        <activity android:name=".activity.manage.worker.OperateWorkerInfoActivity" />
+        <activity android:name=".activity.manage.worker.WorkerInfoActivity" />
+        <activity android:name=".activity.manage.device.DeviceChooseActivity" />
+        <activity android:name=".activity.manage.device.DeviceBoundActivity" />
+        <activity android:name=".activity.common.MultiImgUploadActivity" />
+        <activity android:name=".activity.common.SingleImgUploadActivity" />
+        <activity android:name=".activity.manage.image.FinishImgActivity" />
+        <activity android:name=".activity.manage.BasketActivity" />
+        <activity android:name=".activity.manage.InstallManageActivity" />
+        <activity android:name=".activity.manage.OrderActivity" />
+        <activity android:name=".activity.common.ProjectDetailsActivity" />
         <activity
-            android:name=".activity.SearchProjectActivity"
+            android:name=".activity.common.SearchProjectActivity"
             android:label="@string/title_activity_search_project"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.UserMoreActivity" />
-        <activity android:name=".activity.PersonalInformationActivity" />
-        <activity android:name=".activity.WelcomeActivity">
+        <activity android:name=".activity.common.UserMoreActivity" />
+        <activity android:name=".activity.common.PersonalInformationActivity" />
+        <activity android:name=".activity.common.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,12 +54,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.RegisterActivity"
+            android:name=".activity.logon.RegisterActivity"
             android:launchMode="singleTask" />
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.logon.LoginActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".activity.ITParimaryActivity" />
+        <activity android:name=".activity.common.ITParimaryActivity" />
         <activity
             android:name=".widget.zxing.activity.CaptureActivity"
             android:screenOrientation="portrait"
@@ -68,7 +68,7 @@
             android:name=".widget.zxing.activity.ResultActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" />
-        <activity android:name=".activity.QRcodeCardActivity" /> <!-- 文件服务 -->
+        <activity android:name=".activity.common.QRcodeCardActivity" /> <!-- 文件服务 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.automation.ibinstallationteam.fileprovider"
