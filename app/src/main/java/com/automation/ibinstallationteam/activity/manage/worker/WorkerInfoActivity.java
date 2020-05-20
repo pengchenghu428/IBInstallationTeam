@@ -69,6 +69,7 @@ public class WorkerInfoActivity extends AppCompatActivity implements View.OnClic
     // 项目、吊篮
     private String mProjectId;  // 项目号
     private String mBasketId;  // 吊篮号
+    private int mBasketFlag;
 
     // 个人信息相关
     private UserInfo mUserInfo;
@@ -128,14 +129,25 @@ public class WorkerInfoActivity extends AppCompatActivity implements View.OnClic
                 prePosition = position;
                 WorkerInfo workerInfo = workerInfoList.get(position);
                 // 点击Item
-                Intent intent = new Intent(WorkerInfoActivity.this, OperateWorkerInfoActivity.class);
-                intent.putExtra(OPERATION_TYPE, 1);  // 修改
-                intent.putExtra(PROJECT_ID, mProjectId);
-                intent.putExtra(BASKET_ID, mBasketId);
-                intent.putExtra(WorkerInfoActivity.WORKER_NAME, workerInfo.getName());
-                intent.putExtra(WorkerInfoActivity.WORKER_PHONE_NUMBER, workerInfo.getPhoneNumber());
-                intent.putExtra(WorkerInfoActivity.WORKER_ID_CARD_NUMBER, workerInfo.getIdCardNumber());
-                startActivityForResult(intent, MODIFY_WORKER_INFO_ACTIVITY);
+                if(mBasketFlag==0) {  // 修改、删除
+                    Intent intent = new Intent(WorkerInfoActivity.this, OperateWorkerInfoActivity.class);
+                    intent.putExtra(OPERATION_TYPE, 1);  // 修改
+                    intent.putExtra(PROJECT_ID, mProjectId);
+                    intent.putExtra(BASKET_ID, mBasketId);
+                    intent.putExtra(WorkerInfoActivity.WORKER_NAME, workerInfo.getName());
+                    intent.putExtra(WorkerInfoActivity.WORKER_PHONE_NUMBER, workerInfo.getPhoneNumber());
+                    intent.putExtra(WorkerInfoActivity.WORKER_ID_CARD_NUMBER, workerInfo.getIdCardNumber());
+                    startActivityForResult(intent, MODIFY_WORKER_INFO_ACTIVITY);
+                }else{ // 查看
+                    Intent intent = new Intent(WorkerInfoActivity.this, OperateWorkerInfoActivity.class);
+                    intent.putExtra(OPERATION_TYPE, 2);  // 修改
+                    intent.putExtra(PROJECT_ID, mProjectId);
+                    intent.putExtra(BASKET_ID, mBasketId);
+                    intent.putExtra(WorkerInfoActivity.WORKER_NAME, workerInfo.getName());
+                    intent.putExtra(WorkerInfoActivity.WORKER_PHONE_NUMBER, workerInfo.getPhoneNumber());
+                    intent.putExtra(WorkerInfoActivity.WORKER_ID_CARD_NUMBER, workerInfo.getIdCardNumber());
+                    startActivity(intent);
+                }
             }
 
             @Override
@@ -150,6 +162,8 @@ public class WorkerInfoActivity extends AppCompatActivity implements View.OnClic
         // 添加作业人员按钮
         mAddWorlerLl = (LinearLayout) findViewById(R.id.add_worker_ll);
         mAddWorlerLl.setOnClickListener(this);
+        if(mBasketFlag==1)  // 安装过程可见
+            mAddWorlerLl.setVisibility(View.INVISIBLE);
     }
 
     /* 消息响应
@@ -251,6 +265,7 @@ public class WorkerInfoActivity extends AppCompatActivity implements View.OnClic
         Intent intent = getIntent();
         mProjectId = intent.getStringExtra(InstallManageActivity.PROJECT_ID);
         mBasketId = intent.getStringExtra(InstallManageActivity.BASKET_ID);
+        mBasketFlag = intent.getIntExtra(InstallManageActivity.BASKET_FLAG, 0);
     }
 
     /* 页面返回消息处理

@@ -75,6 +75,7 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
     private String projectId;  // 项目
     private String basketId;  // 吊篮
     private int imageType;  // 图片类型
+    private int basketFlag;
 
     private String mUploadImageType = "提升机";  // 上传图片类型，如提升机、安全锁等；
     private String remoteFileName; // 远程文件名
@@ -149,6 +150,11 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
         mLeftUploadImageIv.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                if(basketFlag==1){
+                    ToastUtil.showToastTips(MultiImgUploadActivity.this,
+                            "正在审核或已完成的吊篮，无权限修改图片！");
+                    return false;
+                }
                 startCameraActivity("left");  // 长按进入拍摄模式
                 return false;
             }
@@ -162,12 +168,22 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
         mRightUploadImageIv.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                if(basketFlag==1){
+                    ToastUtil.showToastTips(MultiImgUploadActivity.this,
+                            "正在审核或已完成的吊篮，无权限修改图片！");
+                    return false;
+                }
                 startCameraActivity("right");  // 长按进入拍摄模式
                 return false;
             }
         });
         mRightUploadBtn = (Button) findViewById(R.id.right_upload_btn);
         mRightUploadBtn.setOnClickListener(this);
+
+        if(basketFlag==1){
+            mLeftUploadBtn.setVisibility(View.INVISIBLE);
+            mRightUploadBtn.setVisibility(View.INVISIBLE);
+        }
 
         initLoadingDialog();
     }
@@ -298,6 +314,7 @@ public class MultiImgUploadActivity extends AppCompatActivity implements View.On
         projectId = intent.getStringExtra(FinishImgActivity.PROJECT_ID);
         basketId = intent.getStringExtra(FinishImgActivity.BASKET_ID);
         imageType = intent.getIntExtra(FinishImgActivity.IMAGE_TYPE_ID, -1);
+        basketFlag = intent.getIntExtra(FinishImgActivity.BASKET_FLAG, 0);
         mRemotePath = "project/" + projectId + "/" + basketId + "/";  // 图片上传地址
         mUploadImageType = PortionMap.chinesePortion.get(imageType);
         remoteFileName = PortionMap.englishPortion.get(imageType);

@@ -58,10 +58,13 @@ public class FinishImgActivity extends AppCompatActivity implements View.OnClick
     public static final String PROJECT_ID = "project_id";  // 项目ID
     public static final String BASKET_ID = "basket_id";  // 吊篮ID
     public static final String IMAGE_TYPE_ID = "image_type_id";  // 上传图片类型
+    public static final String BASKET_FLAG = "basket_flag";  // 吊篮ID
+
 
     // 全局变量
     private String projectId;
     private String basketId;
+    private int basketFlag;
 
     // 个人信息相关
     private UserInfo mUserInfo;
@@ -146,6 +149,7 @@ public class FinishImgActivity extends AppCompatActivity implements View.OnClick
                     Intent intent = new Intent(FinishImgActivity.this, SingleImgUploadActivity.class);
                     intent.putExtra(PROJECT_ID, projectId);
                     intent.putExtra(BASKET_ID, basketId);
+                    intent.putExtra(BASKET_FLAG, basketFlag);
                     intent.putExtra(IMAGE_TYPE_ID, position);
                     startActivity(intent);
                 }else{
@@ -153,6 +157,7 @@ public class FinishImgActivity extends AppCompatActivity implements View.OnClick
                     Intent intent = new Intent(FinishImgActivity.this, MultiImgUploadActivity.class);
                     intent.putExtra(PROJECT_ID, projectId);
                     intent.putExtra(BASKET_ID, basketId);
+                    intent.putExtra(BASKET_FLAG, basketFlag);
                     intent.putExtra(IMAGE_TYPE_ID, position);
                     startActivity(intent);
                 }
@@ -162,6 +167,8 @@ public class FinishImgActivity extends AppCompatActivity implements View.OnClick
         // 确认完工图片
         mVerifyBtn = (Button) findViewById(R.id.verify_finish_img_btn);
         mVerifyBtn.setOnClickListener(this);
+        if(basketFlag ==1)
+            mVerifyBtn.setVisibility(View.INVISIBLE);
     }
 
     /*
@@ -299,6 +306,7 @@ public class FinishImgActivity extends AppCompatActivity implements View.OnClick
         Intent intent = getIntent();
         projectId = intent.getStringExtra(InstallManageActivity.PROJECT_ID);
         basketId = intent.getStringExtra(InstallManageActivity.BASKET_ID);
+        basketFlag = intent.getIntExtra(InstallManageActivity.BASKET_FLAG, 0);
     }
 
     /*

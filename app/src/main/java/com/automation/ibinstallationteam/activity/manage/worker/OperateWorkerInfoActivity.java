@@ -188,15 +188,31 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
             mConfirmBtn.setVisibility(View.VISIBLE);
             mModityBtn.setVisibility(View.GONE);
             mDeleteBtn.setVisibility(View.GONE);
-        }else{
+        }else if(operationType.contains("修改")){
             mModityBtn.setVisibility(View.VISIBLE);
             mDeleteBtn.setVisibility(View.VISIBLE);
             mConfirmBtn.setVisibility(View.GONE);
+        }else{
+            mNameEv.setEnabled(false);  // 不可编辑
+            mNameEv.setFocusable(false);
+            mPhoneNumberEv.setEnabled(false);  // 不可编辑
+            mPhoneNumberEv.setFocusable(false);
+            mIdCardNumberEv.setEnabled(false);  // 不可编辑
+            mIdCardNumberEv.setFocusable(false);
+            mConfirmBtn.setVisibility(View.GONE); // 无按钮
+            mModityBtn.setVisibility(View.GONE);
+            mDeleteBtn.setVisibility(View.GONE);
         }
 
         mOperationIv.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                if(operationType.contains("查看")){
+                    ToastUtil.showToastTips(OperateWorkerInfoActivity.this,
+                            "吊篮正在审核或以完成，无权限 修改！");
+                    return false;
+                }
+
                 if(!isHasPermission()) requestPermission();
                 startCameraActivity();
                 return false;
@@ -436,6 +452,14 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
             operationType = "添加新员工信息";
         } else if(operation_type==1) {
             operationType = "修改员工信息";
+            workerName = intent.getStringExtra(WorkerInfoActivity.WORKER_NAME);
+            workerPhoneNumber = intent.getStringExtra(WorkerInfoActivity.WORKER_PHONE_NUMBER);
+            workerIdCardNumber = intent.getStringExtra(WorkerInfoActivity.WORKER_ID_CARD_NUMBER);
+            mRemotePath = "tempUser/" + workerPhoneNumber + "/";  // 图片上传地址
+            remoteFileName = "operation.jpg";
+            remoteFileUrl = AppConfig.FILE_SERVER_YBLIU_PATH + mRemotePath + remoteFileName;
+        }else if(operation_type==2){ // 查看员工信息
+            operationType = "查看员工信息";
             workerName = intent.getStringExtra(WorkerInfoActivity.WORKER_NAME);
             workerPhoneNumber = intent.getStringExtra(WorkerInfoActivity.WORKER_PHONE_NUMBER);
             workerIdCardNumber = intent.getStringExtra(WorkerInfoActivity.WORKER_ID_CARD_NUMBER);

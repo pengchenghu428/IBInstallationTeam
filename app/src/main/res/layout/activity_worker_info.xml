@@ -24,7 +24,7 @@
 
         </android.support.v7.widget.RecyclerView>
 
-        <!-- 添加设备按键 -->
+        <!-- 添加人员按键 -->
         <LinearLayout
             android:id="@+id/add_worker_ll"
             android:layout_alignParentBottom="true"

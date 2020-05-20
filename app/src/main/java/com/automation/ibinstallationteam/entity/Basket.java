@@ -1,5 +1,7 @@
 package com.automation.ibinstallationteam.entity;
 
+import com.automation.ibinstallationteam.enmu.BasketState;
+
 /**
  * Created by pengchenghu on 2019/11/19.
  * Author Email: 15651851181@163.com
@@ -14,6 +16,7 @@ public class Basket {
     private boolean workerInfo;  // 工人信息
     private boolean finishImg;  // 完工图片
     private boolean deviceBound;  // 设备绑定
+    private int basketState; // 吊篮状态
 
     /* 构造函数
      */
@@ -24,6 +27,14 @@ public class Basket {
         this.workerInfo = workerInfo;
         this.finishImg = finishImg;
         this.deviceBound = deviceBound;
+    }
+
+    public Basket(String id, boolean workerInfo, boolean finishImg, boolean deviceBound, int basketState){
+        this.id = id;
+        this.workerInfo = workerInfo;
+        this.finishImg = finishImg;
+        this.deviceBound = deviceBound;
+        this.basketState = basketState;
     }
 
     /* Bean函数
@@ -82,5 +93,13 @@ public class Basket {
     }
     public void setProjectId(String projectId){
         this.projectId = projectId;
+    }
+
+    public int getBasketState() {
+        return basketState;
+    }
+
+    public void setBasketState(int basketState) {
+        this.basketState = basketState;
     }
 }

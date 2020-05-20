@@ -51,8 +51,10 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
     private final static int SWITCH_BASKET_STATE_MSG = 101;
 
     // 页面消息传递
-    public final static String PROJECT_ID = "projecy_id";
+    public final static String PROJECT_ID = "project_id";
     public final static String BASKET_ID = "basket_id";
+    public final static String BASKET_FLAG = "basket_flag";
+    public final static String BASKET_STATE = "basket_state";
 
     // 吊篮状态选择
     private GridView mBasketStateGv;  // 吊篮状态
@@ -186,6 +188,8 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
                 Intent intent = new Intent(BasketActivity.this, InstallManageActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectId);
                 intent.putExtra(BASKET_ID, mBasketSelectedList.get(position).getId());
+                intent.putExtra(BASKET_FLAG, pre_selectedPosition);
+                intent.putExtra(BASKET_STATE, mBasketSelectedList.get(position).getBasketState());
                 startActivity(intent);
             }
         });
@@ -217,7 +221,7 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
                 .addHeader("Authorization", mToken)
                 .addParam("userId", mUserInfo.getUserId())
                 .addParam("projectId", mProjectId)
-                .addParam("type", 2)
+                .addParam("type", 2)  // 2：所有吊篮状态
                 .get()
                 .url(AppConfig.GET_PROJECT_BY_INSTALLER)
                 .build()
@@ -259,6 +263,7 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
             basket.setWorkerInfo(basketObject.getIntValue(basketId+"_userState"));  // 用户信息 0 未完成 1 完成
             basket.setDeviceBound(basketObject.getIntValue(basketId+"_deviceState"));  // 设备绑定 0 未完成 1 完成
             basket.setFinishImg( basketInfo.getIntValue("pic_flag"));  // 图片上传完整 1 完成 0 未完成
+            basket.setBasketState(basketObject.getIntValue(basketId+"_state"));
             basket.setProjectId(mProjectId);
 
             int flag = basketInfo.getIntValue("flag");  // flag: 0 进行中 1 未完成

@@ -49,14 +49,17 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
     private LinearLayout mDeviceBoundLayout;  // 设备绑定
 
     // 页面消息传递
-    public final static String PROJECT_ID = "projecy_id";
+    public final static String PROJECT_ID = "project_id";
     public final static String BASKET_ID = "basket_id";
+    public final static String BASKET_FLAG = "basket_flag";
 
     private Button mConfirmApplyBtn;  // 确认提交按钮
 
     // 项目、吊篮
     private String mProjectId;  // 项目号
     private String mBasketId;  // 吊篮号
+    private int mBasketFlag; // 吊篮安装状态
+    private int mBasketState; // 吊篮流程状态
 
     // 个人信息相关
     private UserInfo mUserInfo;
@@ -109,6 +112,10 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
         mDeviceBoundLayout.setOnClickListener(this);
         mConfirmApplyBtn = (Button) findViewById(R.id.confirm_apply_btn);
         mConfirmApplyBtn.setOnClickListener(this);
+        if(mBasketFlag==0)  // 提交按钮显示与否
+            mConfirmApplyBtn.setVisibility(View.VISIBLE);
+        else
+            mConfirmApplyBtn.setVisibility(View.INVISIBLE);
     }
 
     /* 消息响应
@@ -122,18 +129,21 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
                 intent = new Intent(InstallManageActivity.this, WorkerInfoActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectId);
                 intent.putExtra(BASKET_ID, mBasketId);
+                intent.putExtra(BASKET_FLAG, mBasketFlag);
                 startActivity(intent);
                 break;
             case R.id.finish_img_layout:  // 完工图片
                 intent = new Intent(InstallManageActivity.this, FinishImgActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectId);
                 intent.putExtra(BASKET_ID, mBasketId);
+                intent.putExtra(BASKET_FLAG, mBasketFlag);
                 startActivity(intent);
                 break;
             case R.id.device_bound_layout:  // 设备绑定
                 intent = new Intent(InstallManageActivity.this, DeviceBoundActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectId);
                 intent.putExtra(BASKET_ID, mBasketId);
+                intent.putExtra(BASKET_FLAG, mBasketFlag);
                 startActivity(intent);
                 break;
             case R.id.confirm_apply_btn:  // 确认提交按钮
@@ -212,5 +222,7 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
         Intent intent = getIntent();
         mProjectId = intent.getStringExtra(BasketActivity.PROJECT_ID);
         mBasketId = intent.getStringExtra(BasketActivity.BASKET_ID);
+        mBasketFlag = intent.getIntExtra(BasketActivity.BASKET_FLAG, 0);
+        mBasketState = intent.getIntExtra(BasketActivity.BASKET_STATE, 1);
     }
 }

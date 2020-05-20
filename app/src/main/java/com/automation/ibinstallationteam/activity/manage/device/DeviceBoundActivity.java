@@ -74,6 +74,7 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
     private String mBasketId;
     private String tmpDeviceName;
     private String tmpDeviceNumber;
+    private int mBasketFlag;
 
     // 个人信息相关
     private UserInfo mUserInfo;
@@ -148,6 +149,12 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
 
             @Override
             public void onDeleteClick(View view, int position) {
+                if(mBasketFlag==1){
+                    ToastUtil.showToastTips(DeviceBoundActivity.this,
+                            "正在审核或已完成的吊篮，无权限删除已绑定的设备！");
+                    return;
+                }
+
                 // 点击Item 中的删除按键
                 prePosition = position;
                 startActivityForResult(new Intent(DeviceBoundActivity.this,
@@ -158,6 +165,8 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
         // 添加设备按钮
         mAddDeviceLl = (LinearLayout) findViewById(R.id.add_device_ll);
         mAddDeviceLl.setOnClickListener(this);
+        if(mBasketFlag==1)  // 不显示添加按钮
+            mAddDeviceLl.setVisibility(View.INVISIBLE);
     }
 
     /* 消息响应
@@ -392,6 +401,7 @@ public class DeviceBoundActivity extends AppCompatActivity implements View.OnCli
     private void getIntentInfo(){
         Intent intent = getIntent();
         mBasketId = intent.getStringExtra(InstallManageActivity.BASKET_ID);
+        mBasketFlag = intent.getIntExtra(InstallManageActivity.BASKET_FLAG, 0);
     }
 
     /* Other

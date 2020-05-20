@@ -72,6 +72,7 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
     private String projectId;  // 项目
     private String basketId;  // 吊篮
     private int imageType;  // 图片类型
+    private int basketFlag;
 
     private String mUploadImageType;  // 上传图片类型，如电柜、摄像头等；
     private String fileName;  // 图片名
@@ -143,6 +144,12 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
         mUploadImageIv.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                if(basketFlag==1){
+                    ToastUtil.showToastTips(SingleImgUploadActivity.this,
+                            "正在审核或已完成的吊篮，无权限修改图片！");
+                    return false;
+                }
+
                 startCameraActivity();  // 长按进入拍摄模式
                 return false;
             }
@@ -150,6 +157,8 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
 
         mUploadBtn = (Button) findViewById(R.id.upload_btn);
         mUploadBtn.setOnClickListener(this);
+        if(basketFlag==1)
+            mUploadBtn.setVisibility(View.INVISIBLE);
 
         initLoadingDialog();
     }
@@ -242,6 +251,7 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
         Intent intent = getIntent();
         projectId = intent.getStringExtra(FinishImgActivity.PROJECT_ID);
         basketId = intent.getStringExtra(FinishImgActivity.BASKET_ID);
+        basketFlag = intent.getIntExtra(FinishImgActivity.BASKET_FLAG, 0);
         imageType = intent.getIntExtra(FinishImgActivity.IMAGE_TYPE_ID, -1);
         mRemotePath = "project/" + projectId + "/" + basketId + "/";  // 图片上传地址
         mUploadImageType = PortionMap.chinesePortion.get(imageType);
