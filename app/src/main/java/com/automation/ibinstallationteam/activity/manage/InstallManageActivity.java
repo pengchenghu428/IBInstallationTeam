@@ -143,7 +143,8 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
                 intent = new Intent(InstallManageActivity.this, DeviceBoundActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectId);
                 intent.putExtra(BASKET_ID, mBasketId);
-                intent.putExtra(BASKET_FLAG, mBasketFlag);
+                // intent.putExtra(BASKET_FLAG, mBasketFlag);
+                intent.putExtra(BASKET_FLAG, 0);  // 甲方要求随时可以替换零件
                 startActivity(intent);
                 break;
             case R.id.confirm_apply_btn:  // 确认提交按钮
