@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.ibinstallationteam.R;
+import com.automation.ibinstallationteam.activity.common.BasketParameterNewActivity;
 import com.automation.ibinstallationteam.activity.manage.device.DeviceBoundActivity;
 import com.automation.ibinstallationteam.activity.manage.image.FinishImgActivity;
 import com.automation.ibinstallationteam.activity.manage.worker.WorkerInfoActivity;
@@ -47,6 +48,8 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
     private LinearLayout mWorkerInfoLayout;  // 信息采集
     private LinearLayout mFinishImgLayout;  // 完工图片
     private LinearLayout mDeviceBoundLayout;  // 设备绑定
+    private LinearLayout mRealTimeParamLayout; // 实时参数
+    private LinearLayout mRealTimeVideoLayout; // 实时视频
 
     // 页面消息传递
     public final static String PROJECT_ID = "project_id";
@@ -110,8 +113,14 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
         mFinishImgLayout.setOnClickListener(this);
         mDeviceBoundLayout = (LinearLayout) findViewById(R.id.device_bound_layout);
         mDeviceBoundLayout.setOnClickListener(this);
+        mRealTimeParamLayout = (LinearLayout) findViewById(R.id.real_time_param_layout);
+        mRealTimeParamLayout.setOnClickListener(this);
+        mRealTimeVideoLayout = (LinearLayout) findViewById(R.id.real_time_video_layout);
+        mRealTimeVideoLayout.setOnClickListener(this);
+
         mConfirmApplyBtn = (Button) findViewById(R.id.confirm_apply_btn);
         mConfirmApplyBtn.setOnClickListener(this);
+
         if(mBasketFlag==0)  // 提交按钮显示与否
             mConfirmApplyBtn.setVisibility(View.VISIBLE);
         else
@@ -147,6 +156,14 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
                 intent.putExtra(BASKET_FLAG, 0);  // 甲方要求随时可以替换零件
                 startActivity(intent);
                 break;
+            case R.id.real_time_param_layout:
+                intent = new Intent(InstallManageActivity.this, BasketParameterNewActivity.class);
+                intent.putExtra(BASKET_ID, mBasketId);
+                startActivity(intent);
+                break;
+            case R.id.real_time_video_layout:
+                break;
+
             case R.id.confirm_apply_btn:  // 确认提交按钮
                 updateFinishImgState();
                 break;

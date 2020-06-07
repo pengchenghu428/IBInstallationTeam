@@ -49,4 +49,10 @@ public class AppConfig {
     public static final String DELETE_ELECTRIC_BOX_CONFIG = ANDROID_URL_PATH.concat("/deleteElectricBoxConfig");
     // 设备状态更新
     public static final String UPDATE_INSTALLER_STATE = ANDROID_URL_PATH.concat("/updateInstallState");
+
+    /*
+     * 吊篮请求
+     */
+    // 获取吊篮实施参数
+    public static final String REAL_TIME_PARAMETER = ANDROID_URL_PATH.concat("/getRealTimeData");
 }
