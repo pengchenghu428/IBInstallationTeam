@@ -1,6 +1,7 @@
 package com.automation.ibinstallationteam.activity.manage.worker;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -120,10 +121,11 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
             String workerIdCardNumber = mIdCardNumberEv.getText().toString();
             switch (msg.what) {
                 case UPLODA_IMAGE_SUCCESS_MSG:
-                    mLoadingDialog.dismiss();
-                    break;
+
                 case UPLODA_IMAGE_FAILURED_MSG:
-                    mLoadingDialog.dismiss();
+                    Activity activity = mLoadingDialog.getOwnerActivity();
+                    if ( activity != null && !activity.isFinishing())
+                        mLoadingDialog.dismiss();
                     break;
                 case ADD_WORKER_SUCCESS_MSG:
                     intent.putExtra(WorkerInfoActivity.WORKER_NAME, workerName);
@@ -549,6 +551,7 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
     // 加载弹窗
     private void initLoadingDialog(){
         mLoadingDialog = new LoadingDialog(OperateWorkerInfoActivity.this, "正在上传...");
+        mLoadingDialog.setOwnerActivity((Activity) this);
         mLoadingDialog.setCancelable(false);
     }
 
@@ -618,6 +621,9 @@ public class OperateWorkerInfoActivity extends AppCompatActivity implements View
         mFileNameList.clear();
 
         String url = remoteFileUrl;
+        if(url == null){  // 空的地址
+            return;
+        }
         Bitmap bm = WebImage.webImageCache.get(url);
         if (bm != null) {
             mWorkPhotos.add(null);

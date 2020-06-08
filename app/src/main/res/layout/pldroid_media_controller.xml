@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/mediacontroller_all"
+    android:clickable="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:background="@color/mediacontroller_bg">
+
+        <!-- 返回按钮 -->
+        <ImageView
+            android:id="@+id/mediacontroller_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/mediacontroller_back"
+            android:background="@drawable/pldroid_mediacontroller_button"/>
+
+        <!-- 房间信息 -->
+        <TextView
+            android:id="@+id/mediacontroller_file_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/mediacontroller_back"
+            android:layout_marginLeft="5dp"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical|left"
+            android:text="HangingBasket_"
+            style="@style/MediaController_Text"/>
+        <!--android:text="HangingBasket_001"/>-->
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mediacontroller_function"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/mediacontroller_bg"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical">
+
+        <!--暂停按钮-->
+        <ImageView
+            android:id="@+id/mediacontroller_play_pause"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/pldroid_mediacontroller_button"
+            android:src="@mipmap/mediacontroller_pause" />
+
+        <!--切换线路-->
+        <ImageView
+            android:id="@+id/mediacontroller_switchway"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_toLeftOf="@+id/mediacontroller_origin_full"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/mediacontroller_switch"
+            android:background="@drawable/pldroid_mediacontroller_button"
+            android:visibility="visible"/>
+        <!--截屏-->
+        <ImageView
+            android:id="@+id/mediacontroller_screenshot"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_toLeftOf="@+id/mediacontroller_origin_full"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/mediacontroller_screenshot"
+            android:background="@drawable/pldroid_mediacontroller_button"
+            android:visibility="gone"/>
+        <!--全屏-->
+        <ImageView
+            android:id="@+id/mediacontroller_origin_full"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@mipmap/mediacontroller_fullscreen"
+            android:background="@drawable/pldroid_mediacontroller_button"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

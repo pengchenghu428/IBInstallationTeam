@@ -19,6 +19,13 @@ public class AppConfig {
     public final static String FILE_SERVER_PASSWORD = "nishipig2/";
 
     /*
+     * 萤石云：appkey
+     */
+    public final static String EZUIKit_APPKEY = "6747c45b0baf43868d88e34748c742e7";
+    public final static String EZUIKit_SECRET = "3b3d8db1a048dd9e197711b37ecb6c42";
+    public final static String EZUIKit_AccessToken = "at.dq2en1fi9mpkqqzrdaqjhk392c7es89x-2h6a9c2x9j-1ry029z-abzmupcyx";
+
+    /*
      * 用户信息
      */
     // 登录
@@ -55,4 +62,19 @@ public class AppConfig {
      */
     // 获取吊篮实施参数
     public static final String REAL_TIME_PARAMETER = ANDROID_URL_PATH.concat("/getRealTimeData");
+
+    /* 获取流媒体视频
+     */
+    // 获取吊篮设备序列号
+    public static final String GET_ELECTRICBOX_CONFIG = ANDROID_URL_PATH.concat("/getElectricBoxConfig");
+    // 视频播放器窗口纵横比
+    public static final float ASPECT_RATIO = (float)1.7777777777777777;  // 16:9
+    // 视频纵横比
+    public static final float ASPECT_RATIO_VIDEO = (float)1.333333333333;  // 4:3
+    //视频推流地址+电柜参数设置
+    public static final String HANGING_BASKET_VIDEO = COMMUNICATION_SERVER_PATH.concat("/sendToDevice");
+    /* 萤石云
+     */
+    public static final String GET_UIKIT_ACCESS_TOKEN = "https://open.ys7.com/api/lapp/token/get";
+    public static final String GET_UIKIT_VIDEO_URL = "https://open.ys7.com/api/lapp/live/video/list";
 }

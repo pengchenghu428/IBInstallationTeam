@@ -25,6 +25,12 @@
     <color name="light_gary">#f4f6f6</color>
     <color name="gray01">#80666666</color>
 
+    <!-- 控件 -->
+    <!-- MediaController -->
+    <color name="transparent">#00000000</color>
+    <color name="mediacontroller_bg_pressed">#ff53c1bd</color>
+    <color name="mediacontroller_bg">#99000000</color>
+
     <!-- dialog -->
     <color name="font_common_1">#424242</color>
     <color name="font_common_2">#a1a1a1</color>

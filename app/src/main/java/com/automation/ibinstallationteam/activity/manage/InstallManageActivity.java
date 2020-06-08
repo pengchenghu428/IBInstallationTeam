@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.ibinstallationteam.R;
 import com.automation.ibinstallationteam.activity.common.BasketParameterNewActivity;
+import com.automation.ibinstallationteam.activity.common.BasketVideoActivity;
 import com.automation.ibinstallationteam.activity.manage.device.DeviceBoundActivity;
 import com.automation.ibinstallationteam.activity.manage.image.FinishImgActivity;
 import com.automation.ibinstallationteam.activity.manage.worker.WorkerInfoActivity;
@@ -162,6 +163,9 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
                 startActivity(intent);
                 break;
             case R.id.real_time_video_layout:
+                intent = new Intent(InstallManageActivity.this, BasketVideoActivity.class);
+                intent.putExtra(BASKET_ID, mBasketId);
+                startActivity(intent);
                 break;
 
             case R.id.confirm_apply_btn:  // 确认提交按钮

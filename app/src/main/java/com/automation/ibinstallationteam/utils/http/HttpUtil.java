@@ -68,4 +68,54 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
+    /*
+     * 设备视频请求
+     * /getRealTimeData
+     * get token deviceId
+     */
+    public static void getDeviceVideoOkHttpRequest(okhttp3.Callback callback, String token,
+                                                   String deviceId, String videoUrl) {
+        // 生成推流地址
+        String command = "/server.command?command=start_rtmp_stream&pipe=0&url=".concat(videoUrl);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type", "getVideo");
+        jsonObject.put("device_id", Long.valueOf(deviceId));
+        jsonObject.put("http_str", command);
+        String json = jsonObject.toJSONString();
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        final Request request = new Request.Builder()
+                .url(AppConfig.HANGING_BASKET_VIDEO)
+                .addHeader("Authorization", token)
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+    /*萤石云
+     */
+    public static void getEZAccessToken(okhttp3.Callback callback, String key, String secret){
+        OkHttpClient client = new OkHttpClient();
+        FormBody builder = new FormBody.Builder()
+                .add("appKey", key)
+                .add("appSecret", secret)
+                .build();
+        final Request request = new Request.Builder()
+                .url(AppConfig.GET_UIKIT_ACCESS_TOKEN)
+                .post(builder)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+    public static void getEZVideoUrlList(okhttp3.Callback callback, String accessToken){
+        OkHttpClient client = new OkHttpClient();
+        FormBody builder = new FormBody.Builder()
+                .add("accessToken", accessToken)
+                .build();
+        final Request request = new Request.Builder()
+                .url(AppConfig.GET_UIKIT_VIDEO_URL)
+                .post(builder)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
 }
