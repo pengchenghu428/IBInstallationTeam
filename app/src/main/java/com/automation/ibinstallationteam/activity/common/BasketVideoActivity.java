@@ -329,7 +329,7 @@ public class BasketVideoActivity extends AppCompatActivity {
                             mVideoUrlList.add(videoUrl);
 //                            String videoUrlHd = row.getString("rtmpHd");  // 暂时无法解析高清视频
 //                            mVideoUrlList.add(videoUrlHd);
-                            mVideoUrlList.add(VIDEO_STREAM_PATH + "/rtmplive/" + mBasketId);  // 板子上视频
+//                            mVideoUrlList.add(VIDEO_STREAM_PATH + "/rtmplive/" + mBasketId);  // 板子上视频
                             mHandler.sendEmptyMessage(SET_VIDEO_URL_MSG);
                             if_exist = true;
                             break;

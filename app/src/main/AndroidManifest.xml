@@ -10,7 +10,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.common.BasketVideoActivity"></activity>
+        <activity android:name=".activity.common.BasketVideoActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeFullscreen">
+        </activity>
         <activity android:name=".activity.common.BasketParameterNewActivity" />
         <activity android:name=".activity.manage.image.CheckExampleImgActivity" />
         <activity android:name=".activity.manage.worker.OperateWorkerInfoActivity" />

@@ -16,6 +16,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+//        main {
+//            jniLibs.srcDirs = ['libs']
+//        }
+    }
 }
 
 dependencies {
@@ -34,10 +39,10 @@ dependencies {
     implementation 'com.github.heynchy:CompressImage:v0.1.2'
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     implementation 'com.hikvision.ezviz:ezuikit:2.1'
-    implementation files('libs\\pldroid-player-2.1.7.jar')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation files('libs/commons-net-3.6.jar')
     implementation files('libs/zxing.jar')
+    implementation files('libs\\pldroid-player-2.1.7.jar')
 }
