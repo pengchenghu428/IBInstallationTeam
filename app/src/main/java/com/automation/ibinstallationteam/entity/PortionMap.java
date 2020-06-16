@@ -11,6 +11,9 @@ import java.util.List;
  */
 public class PortionMap {
     public static final List<String> englishPortion = Arrays.asList(
+            "basket_left_view",
+            "basket_middle_view",
+            "basket_right_view",
             "electrical_box",
             "camera",
             "safe_rope",
@@ -25,6 +28,9 @@ public class PortionMap {
             "big_arm",
             "balance_weight");
     public static final List<String> chinesePortion = Arrays.asList(
+            "吊篮左视",
+            "吊篮主视",
+            "吊篮右视",
             "电柜",
             "摄像头",
             "安全绳",
