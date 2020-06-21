@@ -26,7 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.automation.ibinstallationteam.R;
-import com.automation.ibinstallationteam.activity.common.BasketVideoActivity;
+import com.automation.ibinstallationteam.activity.manage.video.BasketVideoActivity;
 import com.automation.ibinstallationteam.utils.ToastUtil;
 import com.pili.pldroid.player.IMediaController;
 import com.pili.pldroid.player.widget.PLVideoTextureView;

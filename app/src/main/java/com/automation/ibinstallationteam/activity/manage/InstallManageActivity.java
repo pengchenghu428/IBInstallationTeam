@@ -19,8 +19,9 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.ibinstallationteam.R;
-import com.automation.ibinstallationteam.activity.common.BasketParameterNewActivity;
-import com.automation.ibinstallationteam.activity.common.BasketVideoActivity;
+import com.automation.ibinstallationteam.activity.manage.param.BasketParameterNewActivity;
+import com.automation.ibinstallationteam.activity.manage.site.ChangeSiteIdActivity;
+import com.automation.ibinstallationteam.activity.manage.video.BasketVideoActivity;
 import com.automation.ibinstallationteam.activity.manage.device.DeviceBoundActivity;
 import com.automation.ibinstallationteam.activity.manage.image.FinishImgActivity;
 import com.automation.ibinstallationteam.activity.manage.worker.WorkerInfoActivity;
@@ -51,11 +52,13 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
     private LinearLayout mDeviceBoundLayout;  // 设备绑定
     private LinearLayout mRealTimeParamLayout; // 实时参数
     private LinearLayout mRealTimeVideoLayout; // 实时视频
+    private LinearLayout mSiteIdLayout; // 现场编号
 
     // 页面消息传递
     public final static String PROJECT_ID = "project_id";
     public final static String BASKET_ID = "basket_id";
     public final static String BASKET_FLAG = "basket_flag";
+    public final static String SITE_ID = "site_id";
 
     private Button mConfirmApplyBtn;  // 确认提交按钮
 
@@ -64,6 +67,7 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
     private String mBasketId;  // 吊篮号
     private int mBasketFlag; // 吊篮安装状态
     private int mBasketState; // 吊篮流程状态
+    private String mSiteId; // 现场编号
 
     // 个人信息相关
     private UserInfo mUserInfo;
@@ -118,6 +122,8 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
         mRealTimeParamLayout.setOnClickListener(this);
         mRealTimeVideoLayout = (LinearLayout) findViewById(R.id.real_time_video_layout);
         mRealTimeVideoLayout.setOnClickListener(this);
+        mSiteIdLayout = (LinearLayout) findViewById(R.id.site_id_layout);
+        mSiteIdLayout.setOnClickListener(this);
 
         mConfirmApplyBtn = (Button) findViewById(R.id.confirm_apply_btn);
         mConfirmApplyBtn.setOnClickListener(this);
@@ -165,6 +171,12 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
             case R.id.real_time_video_layout:
                 intent = new Intent(InstallManageActivity.this, BasketVideoActivity.class);
                 intent.putExtra(BASKET_ID, mBasketId);
+                startActivity(intent);
+                break;
+            case R.id.site_id_layout:
+                intent = new Intent(InstallManageActivity.this, ChangeSiteIdActivity.class);
+                intent.putExtra(BASKET_ID, mBasketId);
+                intent.putExtra(SITE_ID, mSiteId);
                 startActivity(intent);
                 break;
 
@@ -244,6 +256,7 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
         Intent intent = getIntent();
         mProjectId = intent.getStringExtra(BasketActivity.PROJECT_ID);
         mBasketId = intent.getStringExtra(BasketActivity.BASKET_ID);
+        mSiteId = intent.getStringExtra(BasketActivity.SITE_ID);
         mBasketFlag = intent.getIntExtra(BasketActivity.BASKET_FLAG, 0);
         mBasketState = intent.getIntExtra(BasketActivity.BASKET_STATE, 1);
     }

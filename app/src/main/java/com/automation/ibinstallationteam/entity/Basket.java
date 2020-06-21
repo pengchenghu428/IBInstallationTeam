@@ -13,6 +13,7 @@ public class Basket {
      */
     private String projectId;  // 项目编号
     private String id;  // 电柜编号
+    private String siteId; // 现场编号
     private boolean workerInfo;  // 工人信息
     private boolean finishImg;  // 完工图片
     private boolean deviceBound;  // 设备绑定
@@ -46,6 +47,14 @@ public class Basket {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getSiteId() {
+        return siteId;
+    }
+
+    public void setSiteId(String siteId){
+        this.siteId = siteId;
     }
 
     public boolean isWorkerInfo() {

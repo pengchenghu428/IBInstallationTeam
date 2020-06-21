@@ -55,6 +55,7 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
     public final static String BASKET_ID = "basket_id";
     public final static String BASKET_FLAG = "basket_flag";
     public final static String BASKET_STATE = "basket_state";
+    public final static String SITE_ID = "site_id";
 
     // 吊篮状态选择
     private GridView mBasketStateGv;  // 吊篮状态
@@ -190,6 +191,7 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
                 intent.putExtra(BASKET_ID, mBasketSelectedList.get(position).getId());
                 intent.putExtra(BASKET_FLAG, pre_selectedPosition);
                 intent.putExtra(BASKET_STATE, mBasketSelectedList.get(position).getBasketState());
+                intent.putExtra(SITE_ID, mBasketSelectedList.get(position).getSiteId());
                 startActivity(intent);
             }
         });
@@ -264,6 +266,7 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
             basket.setDeviceBound(basketObject.getIntValue(basketId+"_deviceState"));  // 设备绑定 0 未完成 1 完成
             basket.setFinishImg( basketInfo.getIntValue("pic_flag"));  // 图片上传完整 1 完成 0 未完成
             basket.setBasketState(basketObject.getIntValue(basketId+"_state"));
+            basket.setSiteId(basketObject.getString(basketId+"_siteNo"));
             basket.setProjectId(mProjectId);
 
             int flag = basketInfo.getIntValue("flag");  // flag: 0 进行中 1 未完成

@@ -2,7 +2,7 @@
 <!-- 吊篮子项 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="120dp"
     android:orientation="horizontal"
     android:layout_margin="5dp">
 
@@ -32,7 +32,17 @@
                 android:text="电柜编号："/>
             <TextView style="@style/ItemContentTextView"
                 android:id="@+id/basket_id_tv"
-                android:text="36FFD6054154393207782457"/>
+                android:text="202006210012"/>
+        </LinearLayout>
+
+        <!-- 电柜编号 -->
+        <LinearLayout
+            style="@style/ItemLinearLayout">
+            <TextView style="@style/ItemHintTextView"
+                android:text="现场编号："/>
+            <TextView style="@style/ItemContentTextView"
+                android:id="@+id/site_id_tv"
+                android:text="暂未设定"/>
         </LinearLayout>
 
         <!-- 人员信息 -->

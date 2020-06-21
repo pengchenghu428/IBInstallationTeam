@@ -1,4 +1,4 @@
-package com.automation.ibinstallationteam.activity.common;
+package com.automation.ibinstallationteam.activity.manage.video;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -47,7 +47,6 @@ import okhttp3.Response;
 
 import static com.automation.ibinstallationteam.application.AppConfig.ASPECT_RATIO;
 import static com.automation.ibinstallationteam.application.AppConfig.ASPECT_RATIO_VIDEO;
-import static com.automation.ibinstallationteam.application.AppConfig.VIDEO_STREAM_PATH;
 
 public class BasketVideoActivity extends AppCompatActivity {
 

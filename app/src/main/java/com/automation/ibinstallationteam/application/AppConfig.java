@@ -56,6 +56,8 @@ public class AppConfig {
     public static final String DELETE_ELECTRIC_BOX_CONFIG = ANDROID_URL_PATH.concat("/deleteElectricBoxConfig");
     // 设备状态更新
     public static final String UPDATE_INSTALLER_STATE = ANDROID_URL_PATH.concat("/updateInstallState");
+    // 更新现场编号
+    public static final String UPDATE_SITE_ID = ANDROID_URL_PATH.concat("/updateSiteNo");
 
     /*
      * 吊篮请求

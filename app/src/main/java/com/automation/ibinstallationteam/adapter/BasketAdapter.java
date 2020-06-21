@@ -14,6 +14,7 @@ import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.Basket;
 import com.automation.ibinstallationteam.entity.Order;
 import com.automation.ibinstallationteam.widget.image.SmartImageView;
+import com.automation.ibinstallationteam.widget.image.WebImage;
 
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
         View mView;
         SmartImageView ivLogo;  // logo
         TextView tvId;  // 吊篮ID
+        TextView tvSiteId; // 现场编号
         ImageView ivWorkerInfo;  //
         ImageView ivFinishImg;  //
         ImageView ivDeviceBound;  //
@@ -45,6 +47,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
             mView = itemView;
             ivLogo = itemView.findViewById(R.id.basket_logo_smartImg);
             tvId = itemView.findViewById(R.id.basket_id_tv);
+            tvSiteId = itemView.findViewById(R.id.site_id_tv);
             ivWorkerInfo = itemView.findViewById(R.id.worker_info_iv);
             ivFinishImg = itemView.findViewById(R.id.finish_img_iv);
             ivDeviceBound = itemView.findViewById(R.id.device_bound_iv);
@@ -80,9 +83,23 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     public void onBindViewHolder(@NonNull BasketAdapter.ViewHolder viewHolder, int i) {
         Basket basket = mBasketList.get(i);
 
+        // 优先显示主视图
         viewHolder.ivLogo.setImageUrl(AppConfig.FILE_SERVER_YBLIU_PATH + "/project/" +
-                basket.getProjectId() + "/" + basket.getId() + "/electrical_box.jpg");
+                basket.getProjectId() + "/" + basket.getId() + "/basket_middle_view.jpg");
+        if(viewHolder.ivLogo.getBitmap() == null){
+            // 其次显示左视图
+            viewHolder.ivLogo.setImageUrl(AppConfig.FILE_SERVER_YBLIU_PATH + "/project/" +
+                    basket.getProjectId() + "/" + basket.getId() + "/basket_left_view.jpg");
+            if (viewHolder.ivLogo.getBitmap()==null){
+                // 最终显示右视图
+                viewHolder.ivLogo.setImageUrl(AppConfig.FILE_SERVER_YBLIU_PATH + "/project/" +
+                        basket.getProjectId() + "/" + basket.getId() + "/basket_right_view.jpg");
+            }
+        }
+
         viewHolder.tvId.setText(basket.getId());
+        if(!(basket.getSiteId()==null) && !(basket.getSiteId().equals("")))
+            viewHolder.tvSiteId.setText(basket.getSiteId());
 
         if(basket.isWorkerInfo())
             viewHolder.ivWorkerInfo.setImageResource(R.mipmap.ic_normal);

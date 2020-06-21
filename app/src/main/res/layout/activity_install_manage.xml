@@ -98,15 +98,16 @@
             </LinearLayout>
             <View
                 style="@style/me_vertical_view_style"/>
-            <!-- 查看视频 -->
+            <!-- 现场编号设定 -->
             <LinearLayout
+                android:id="@+id/site_id_layout"
                 style="@style/me_userLayout_linearLayout_style">
                 <ImageView
                     style="@style/me_userLayout_imageView_style"
-                    android:src="@mipmap/ic_whole_white"/>
+                    android:src="@mipmap/ic_site_id"/>
                 <TextView
                     style="@style/me_userLayout_textView_style1"
-                    android:text=""/>
+                    android:text="现场编号"/>
             </LinearLayout>
         </LinearLayout>
 
