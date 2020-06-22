@@ -13,9 +13,14 @@ import com.automation.ibinstallationteam.R;
 import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.Basket;
 import com.automation.ibinstallationteam.entity.Order;
+import com.automation.ibinstallationteam.entity.Portion;
+import com.automation.ibinstallationteam.entity.PortionMap;
+import com.automation.ibinstallationteam.utils.ftp.FTPUtil;
 import com.automation.ibinstallationteam.widget.image.SmartImageView;
 import com.automation.ibinstallationteam.widget.image.WebImage;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +32,8 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
 
     private Context mContext;
     private List<Basket> mBasketList;
+    private FTPUtil mFTPClient;
+    private List<String> mIndexUrls;
     private OnItemClickListener mOnItemClickListener;  // 消息监听
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -69,6 +76,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     public BasketAdapter(Context mContext, List<Basket> basketList){
         this.mContext = mContext;
         mBasketList = basketList;
+//        initFTPClient();
     }
 
     @NonNull
@@ -84,16 +92,22 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
         Basket basket = mBasketList.get(i);
 
         // 优先显示主视图
-        viewHolder.ivLogo.setImageUrl(AppConfig.FILE_SERVER_YBLIU_PATH + "/project/" +
-                basket.getProjectId() + "/" + basket.getId() + "/basket_middle_view.jpg");
+        String remoteUrl = AppConfig.FILE_SERVER_YBLIU_PATH + "project/" + basket.getProjectId() + "/" + basket.getId() + "/";
+        viewHolder.ivLogo.setImageUrl(remoteUrl + PortionMap.englishPortion.get(1) + ".jpg");
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         if(viewHolder.ivLogo.getBitmap() == null){
-            // 其次显示左视图
-            viewHolder.ivLogo.setImageUrl(AppConfig.FILE_SERVER_YBLIU_PATH + "/project/" +
-                    basket.getProjectId() + "/" + basket.getId() + "/basket_left_view.jpg");
-            if (viewHolder.ivLogo.getBitmap()==null){
-                // 最终显示右视图
-                viewHolder.ivLogo.setImageUrl(AppConfig.FILE_SERVER_YBLIU_PATH + "/project/" +
-                        basket.getProjectId() + "/" + basket.getId() + "/basket_right_view.jpg");
+            viewHolder.ivLogo.setImageUrl(remoteUrl + PortionMap.englishPortion.get(0) + ".jpg");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(viewHolder.ivLogo.getBitmap() == null){
+                viewHolder.ivLogo.setImageUrl(remoteUrl + PortionMap.englishPortion.get(2) + ".jpg");
             }
         }
 
@@ -140,4 +154,46 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
          */
         public void onItemClick(View view, int position);
     }
+
+    /*
+     * FTP 相关
+     */
+//    private void initUrls(){
+//        mIndexUrls = new ArrayList<>();
+//        for(int idx=0; idx < mBasketList.size(); idx++){
+//            mIndexUrls.add("");
+//            getIndexUrl(idx);
+//        }
+//    }
+//    // 检查文件是否存在
+//    private void getIndexUrl(final int idx){
+//        Basket basket = mBasketList.get(idx);
+//        final String mRemotePath = "project/" + basket.getProjectId() + "/" + basket.getId();  // 图片上传地址
+//        new Thread() {
+//            public void run() {
+//                try {
+//                    // 上传文件
+//                    mFTPClient.openConnect();  // 建立连接
+//                    mFTPClient.uploadingInit(mRemotePath); // 上传文件初始化
+//                    List<String>  filenames = mFTPClient.listCurrentFileNames();
+//                    int[] integers = {1, 0, 2};
+//                    for (int i : integers ){
+//                        if (filenames.contains(PortionMap.englishPortion.get(i) + ".jpg")){
+////                            mIndexUrl = mRemotePath + '/' + PortionMap.englishPortion.get(idx) + ".jpg";
+//                            mIndexUrls.set(idx, mRemotePath + '/' + PortionMap.englishPortion.get(i) + ".jpg");
+//                            break;
+//                        }
+//                    }
+//                    mFTPClient.closeConnect();  // 关闭连接
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }.start();
+//    }
+//    // FTP 初始化
+//    private void initFTPClient(){
+//        mFTPClient = new FTPUtil(AppConfig.FILE_SERVER_YBLIU_IP, AppConfig.FILE_SERVER_YBLIU_PORT,
+//                AppConfig.FILE_SERVER_USERNAME, AppConfig.FILE_SERVER_PASSWORD);
+//    }
 }

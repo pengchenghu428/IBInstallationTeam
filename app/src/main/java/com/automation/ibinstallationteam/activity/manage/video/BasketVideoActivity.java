@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -59,6 +60,7 @@ public class BasketVideoActivity extends AppCompatActivity {
     public static final int SET_VIDEO_URL_MSG = 101;
     public static final int INIT_VIDEO_URL_MSG = 103;
     public static final int FINISH_ACTIVITY_MSG = 104;
+    public static final int NO_VALID_CAMERA_MSG = 105;
 
     // 控件声明
     private RelativeLayout mVideoViewRelativelayout;
@@ -120,14 +122,23 @@ public class BasketVideoActivity extends AppCompatActivity {
                 case INIT_VIDEO_URL_MSG:  // 初始化播放地址并打开默认视频流
                     initEzVideoUrl();
                     break;
-                case FINISH_ACTIVITY_MSG:
+                case NO_VALID_CAMERA_MSG:
                     if(msg.arg1 == 1){
                         ToastUtil.showToastTips(BasketVideoActivity.this,
                                 "该摄像头未激活或未添加至萤石云账号，请联系管理员");
                     }else if(msg.arg1 == 2){
-                        ToastUtil.showToastTips(BasketVideoActivity.this, "设备摄像头未绑定");
+                        ToastUtil.showToastTips(BasketVideoActivity.this,
+                                "设备摄像头未绑定");
                     }
-                    finish();
+                    mHandler.sendEmptyMessage(FINISH_ACTIVITY_MSG);
+                    break;
+                case FINISH_ACTIVITY_MSG:
+                    try {
+                        Thread.sleep(2000);
+                        finish();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:break;
             }
@@ -222,7 +233,7 @@ public class BasketVideoActivity extends AppCompatActivity {
 
                             if(cameraId==null || cameraId.equals("") || cameraId.isEmpty()){
                                 Message msg = new Message();
-                                msg.what = FINISH_ACTIVITY_MSG;
+                                msg.what = NO_VALID_CAMERA_MSG;
                                 msg.arg1 = 2;
                                 mHandler.handleMessage(msg);
                             }else{  // 获取正确的摄像头序列号
@@ -335,10 +346,13 @@ public class BasketVideoActivity extends AppCompatActivity {
                         }
                     }
                     if(!if_exist){
+
                         Message msg = new Message();
-                        msg.what = FINISH_ACTIVITY_MSG;
+                        msg.what = NO_VALID_CAMERA_MSG;
                         msg.arg1 = 2;
+                        Looper.prepare();
                         mHandler.handleMessage(msg);
+                        Looper.loop();
                     }
                 }
             }

@@ -57,6 +57,9 @@ public class ChangeSiteIdActivity extends AppCompatActivity {
             switch(msg.what) {
                 case UPDATE_SITE_ID_SUCCESS:  // 更新WorkInfoList状态
                     ToastUtil.showToastTips(ChangeSiteIdActivity.this, "更新成功");
+                    Intent intent = new Intent();
+                    intent.putExtra(InstallManageActivity.SITE_ID, mSiteIdEv.getText().toString());
+                    setResult(RESULT_OK, intent);
                     finish();
                     break;
                 case UPDATE_SITE_ID_FAILED:

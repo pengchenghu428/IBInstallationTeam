@@ -28,7 +28,9 @@ import com.automation.ibinstallationteam.adapter.BasketAdapter;
 import com.automation.ibinstallationteam.adapter.MgStateAdapter;
 import com.automation.ibinstallationteam.application.AppConfig;
 import com.automation.ibinstallationteam.entity.Basket;
+import com.automation.ibinstallationteam.entity.PortionMap;
 import com.automation.ibinstallationteam.entity.UserInfo;
+import com.automation.ibinstallationteam.utils.ftp.FTPUtil;
 import com.automation.ibinstallationteam.utils.okhttp.BaseCallBack;
 import com.automation.ibinstallationteam.utils.okhttp.BaseOkHttpClient;
 import com.scwang.smartrefresh.header.BezierCircleHeader;
@@ -83,6 +85,11 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
 
     // 业务数据
     private String mProjectId;
+
+    // ftp
+    private FTPUtil mFTPClient;
+    private List<List<String>>  mIndexUrlSummary = new ArrayList<>();
+    private List<Basket> mIndexUrlSelected= new ArrayList<>();
 
     // 个人信息相关
     private UserInfo mUserInfo;
@@ -270,8 +277,12 @@ public class BasketActivity extends AppCompatActivity implements View.OnTouchLis
             basket.setProjectId(mProjectId);
 
             int flag = basketInfo.getIntValue("flag");  // flag: 0 进行中 1 未完成
-            if(flag==0) mBasketSummaryList.get(0).add(basket);
-            else if(flag==1) mBasketSummaryList.get(1).add(basket);
+            if(flag==0) {
+                mBasketSummaryList.get(0).add(basket);
+            }
+            else if(flag==1) {
+                mBasketSummaryList.get(1).add(basket);
+            }
         }
         mHandler.sendEmptyMessage(SWITCH_BASKET_STATE_MSG);
     }

@@ -177,7 +177,7 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
                 intent = new Intent(InstallManageActivity.this, ChangeSiteIdActivity.class);
                 intent.putExtra(BASKET_ID, mBasketId);
                 intent.putExtra(SITE_ID, mSiteId);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
                 break;
 
             case R.id.confirm_apply_btn:  // 确认提交按钮
@@ -194,6 +194,20 @@ public class InstallManageActivity extends AppCompatActivity implements View.OnC
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // 下上个页面返回消息
+    @Override
+    protected  void  onActivityResult(int requestCode, int resultCode, Intent data){
+        switch (requestCode){
+            case 1:
+                if (resultCode == RESULT_OK){
+                    String site_id = data.getStringExtra(InstallManageActivity.SITE_ID);
+                    mSiteId = site_id;
+                }
+                break;
+            default:break;
+        }
     }
 
     /* 后台通信
