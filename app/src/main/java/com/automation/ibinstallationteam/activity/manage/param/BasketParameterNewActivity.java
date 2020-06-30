@@ -276,10 +276,12 @@ public class BasketParameterNewActivity extends AppCompatActivity {
         StringBuffer stringBuffer = new StringBuffer(boolData32);
         boolData32 = stringBuffer.reverse().toString();
         // 开关变量
-        String varswitch = boolData32.substring(4, 8);
+//        String varswitch = boolData32.substring(4, 8);
+        String varswitch = boolData32.substring(0, 4);
         updateVarSwitch(varswitch);
         // 控制输入
-        String control_input = boolData32.substring(0, 4);
+//        String control_input = boolData32.substring(0, 4);
+        String control_input = boolData32.substring(4, 8);
         updateControInput(control_input);
 
         /*
@@ -328,8 +330,8 @@ public class BasketParameterNewActivity extends AppCompatActivity {
     private void updateVarSwitch(String varswitch){
         mVarSwitches.get(0).setState(varswitch.charAt(0) - 48);  // 预紧绳
         mVarSwitches.get(1).setState(varswitch.charAt(1) - 48);  // 限位
-        mVarSwitches.get(2).setState(varswitch.charAt(2) - 48);  // 重量
-        mVarSwitches.get(3).setState(varswitch.charAt(3) - 48);  // 倾斜
+        mVarSwitches.get(2).setState(varswitch.charAt(3) - 48);  // 重量
+        mVarSwitches.get(3).setState(varswitch.charAt(2) - 48);  // 倾斜
         mVarSwitchAdapter.notifyDataSetChanged();
     }
 

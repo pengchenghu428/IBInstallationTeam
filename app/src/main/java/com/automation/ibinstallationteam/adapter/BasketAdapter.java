@@ -95,14 +95,14 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
         String remoteUrl = AppConfig.FILE_SERVER_YBLIU_PATH + "project/" + basket.getProjectId() + "/" + basket.getId() + "/";
         viewHolder.ivLogo.setImageUrl(remoteUrl + PortionMap.englishPortion.get(1) + ".jpg");
         try {
-            Thread.sleep(100);
+            Thread.sleep(50);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         if(viewHolder.ivLogo.getBitmap() == null){
             viewHolder.ivLogo.setImageUrl(remoteUrl + PortionMap.englishPortion.get(0) + ".jpg");
             try {
-                Thread.sleep(100);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
