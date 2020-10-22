@@ -235,7 +235,7 @@ public class BasketVideoActivity extends AppCompatActivity {
                                 Message msg = new Message();
                                 msg.what = NO_VALID_CAMERA_MSG;
                                 msg.arg1 = 2;
-                                mHandler.handleMessage(msg);
+                                mHandler.sendMessage(msg);
                             }else{  // 获取正确的摄像头序列号
                                 mDeviceSerial = cameraId;
                                 mHandler.sendEmptyMessage(INIT_VIDEO_URL_MSG);
@@ -349,7 +349,7 @@ public class BasketVideoActivity extends AppCompatActivity {
 
                         Message msg = new Message();
                         msg.what = NO_VALID_CAMERA_MSG;
-                        msg.arg1 = 2;
+                        msg.arg1 = 1;  // 状态码
                         Looper.prepare();
                         mHandler.handleMessage(msg);
                         Looper.loop();
