@@ -88,4 +88,5 @@ public class AppConfig {
      */
     public static final String GET_UIKIT_ACCESS_TOKEN = "https://open.ys7.com/api/lapp/token/get";
     public static final String GET_UIKIT_VIDEO_URL = "https://open.ys7.com/api/lapp/live/video/list";
+    public static final String GET_UIKIT_DEVICE_INFO = "https://open.ys7.com/api/lapp/live/address/get";
 }

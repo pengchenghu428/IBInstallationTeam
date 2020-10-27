@@ -114,7 +114,8 @@ public class BasketVideoActivity extends AppCompatActivity {
                     mEditor.putLong("expireTime", expireTime);
                     mEditor.putString("accessToken", accessToken);
                     mEditor.commit();
-                    getEzVideoUrl();
+//                    getEzVideoUrl();
+                    getEZDeviceVideoUrl();
                     break;
                 case SET_VIDEO_URL_MSG:  // 设置播放地址
                     openEzVideo();
@@ -129,6 +130,9 @@ public class BasketVideoActivity extends AppCompatActivity {
                     }else if(msg.arg1 == 2){
                         ToastUtil.showToastTips(BasketVideoActivity.this,
                                 "设备摄像头未绑定");
+                    }else if(msg.arg1 == 3){
+                        ToastUtil.showToastTips(BasketVideoActivity.this,
+                                "该摄像头不在线或未开通直播功能，请联系管理员");
                     }
                     mHandler.sendEmptyMessage(FINISH_ACTIVITY_MSG);
                     break;
@@ -358,6 +362,51 @@ public class BasketVideoActivity extends AppCompatActivity {
             }
         }, mAccessToken);
     }
+
+
+    // 获取指定序列号设备的的直播地址
+    private void getEZDeviceVideoUrl(){
+        HttpUtil.getEZVideoUrl(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "失败：" + e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseData = response.body().string();
+                JSONObject jsonObject = JSON.parseObject(responseData);  // string 转 jsonobject
+                String code = jsonObject.getString("code");
+                if (code.equals("200")){
+                    String data = jsonObject.getString("data");
+                    JSONArray urls = JSON.parseArray(data);
+                    if (urls.size() == 1){
+                        JSONObject row = urls.getJSONObject(0);
+                        String videoUrl = row.getString("rtmp");  // 一般清晰度视频
+                        if(videoUrl != null && !videoUrl.equals("")){
+                            mVideoUrlList.add(videoUrl);
+                            mHandler.sendEmptyMessage(SET_VIDEO_URL_MSG);
+                            return;
+                        }else{
+                            Message msg = new Message();
+                            msg.what = NO_VALID_CAMERA_MSG;
+                            msg.arg1 = 3;  // 设备存在，但不在线或未激活
+                            Looper.prepare();
+                            mHandler.handleMessage(msg);
+                            Looper.loop();
+                        }
+                    }
+                }
+                Message msg = new Message();
+                msg.what = NO_VALID_CAMERA_MSG;
+                msg.arg1 = 1;  // 状态码
+                Looper.prepare();
+                mHandler.handleMessage(msg);
+                Looper.loop();
+            }
+        }, mAccessToken, mDeviceSerial + ":1");
+    }
+
     // 更新状态
     private void updateStatInfo() {
         long bitrate = mVideoView.getVideoBitrate() / 1024;
@@ -384,7 +433,8 @@ public class BasketVideoActivity extends AppCompatActivity {
             if (System.currentTimeMillis() >= mExpireTime*1000) {  // 时间超过7天，重新获取
                 getEzAccessToken();
             }else{
-                getEzVideoUrl();
+//                getEzVideoUrl();
+                getEZDeviceVideoUrl();
             }
         }
     }
