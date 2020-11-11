@@ -298,12 +298,12 @@ public class BasketParameterNewActivity extends AppCompatActivity {
         String [] weights = device_weight.split(",");
         sb = new StringBuilder();
         formatter = new Formatter(sb, Locale.US);
-        mDeviceWeightTotal.setText(formatter.format("%.2f Kg", Float.parseFloat(weights[0])).toString());
+        mDeviceWeightTotal.setText(formatter.format("%.2f Kg", Float.parseFloat(weights[2])).toString());
         // 称重明细
         sb = new StringBuilder();
         formatter = new Formatter(sb, Locale.US);
         mDeviceWeight.setText(formatter.format("(%.2f Kg, %.2f Kg)",
-                Float.parseFloat(weights[1]), Float.parseFloat(weights[2])).toString());
+                Float.parseFloat(weights[0]), Float.parseFloat(weights[1])).toString());
 
         // 倾斜仪
         String clinometer_degree = electric_data_json_object.getString("degree");
