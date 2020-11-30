@@ -56,9 +56,9 @@ public class DecodeThread extends Thread {
 		hints = new EnumMap<DecodeHintType, Object>(DecodeHintType.class);
 
 		Collection<BarcodeFormat> decodeFormats = new ArrayList<BarcodeFormat>();
-		decodeFormats.addAll(EnumSet.of(BarcodeFormat.AZTEC));
-		decodeFormats.addAll(EnumSet.of(BarcodeFormat.PDF_417));
-		decodeFormats.addAll(EnumSet.of(BarcodeFormat.DATA_MATRIX));
+//		decodeFormats.addAll(EnumSet.of(BarcodeFormat.AZTEC));
+//		decodeFormats.addAll(EnumSet.of(BarcodeFormat.PDF_417));
+//		decodeFormats.addAll(EnumSet.of(BarcodeFormat.DATA_MATRIX));
 
 
 		switch (decodeMode) {
